@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PPE</title>
+
+    <style>
+        
+        .column {
+          float: left;
+          width: 33%;
+          /*padding: 10px;*/
+        }
+        
+        /* Clear floats after the columns */
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+        </style>
+</head>
+
+<body>
+    <h1>Purple People Eaters
+    </h1>
+    <h2>A remake of the 1980's Acorn game "Purple People Eaters" - an alpha version</h2>
+    <h2>Chose you settings and click play </h2>
+    <form id="form">
+        <div class="row">
+            <div class="column" >
+                <p>
+                    <label id="a">Number of monsters:</label>
+                    <input type="number" id="n_of_monsters" name="n_of_monsters" value="2">
+                </p>
+                <p>
+                    <label id="b">Monsters speed (Hz):</label>
+                    <input type="text" id="monster_speed" name="monster_speed" value="2">
+                </p>
+                <p>
+                    <label id="c">Monsters chaising multiplayer:</label>
+                    <input type="text" id="prob_mult_p" name="prob_mult_p" value="2.5">
+                </p>
+                <p>
+                    <label id="d">Monsters blocking multiplayer:</label>
+                    <input type="number" id="prob_mult_b" name="prob_mult_b" value="0">
+                </p>
+            </div>
+            <div class="column" >
+                <p>
+                    <label id="e">Number of rows:</label>
+                    <input type="number" id="n_of_rows" name="n_of_rows" value="20">
+                </p>
+                <p>
+                    <label id="f">Number of collumns:</label>
+                    <input type="number" id="n_of_columns" name="n_of_columns" value="40">
+                </p>
+                <p>
+                    <label id="g">Squere size (px):</label>
+                    <input type="number" id="squere_size" name="squere_size" value="30">
+                </p>
+
+            </div>
+
+            <div class="column" >
+                <p>
+                    <label id="h">Precent of boxes (%):</label>
+                    <input type="number" id="present_of_boxes" name="present_of_boxes" value="20">
+
+                </p>
+                <p>
+                    <label  id="i">Allow player move diagonly:</label>
+                    <select name="allow_player_diagonls" id="allow_player_diagonls">
+                        <option value="true">yes</option>
+                        <option value="false">no</option>
+                    </select>
+                </p>
+                <p>
+                    <label id="j">Allow monsters move diagonly:</label>
+                    <select name="allow_monster_diagonls" id="allow_monster_diagonls">
+                        <option value="true">yes</option>
+                        <option value="false">no</option>
+                    </select>
+                </p>
+            </div>
+        </div>
+        <div>
+            <button type="submit">Play</button>
+        </div>
+    </form>
+
+    <script>
+        const form = document.getElementById('form')
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            //console.log("bla");
+            localStorage.setItem('n_of_monsters', document.getElementById("n_of_monsters").value)
+            localStorage.setItem('monster_speed', document.getElementById("monster_speed").value)
+            localStorage.setItem('n_of_rows', document.getElementById("n_of_rows").value)
+            localStorage.setItem('n_of_columns', document.getElementById("n_of_columns").value)
+            localStorage.setItem('squre_size', document.getElementById("squere_size").value)
+            localStorage.setItem('present_of_boxes', document.getElementById("present_of_boxes").value)
+            localStorage.setItem('prob_mult_p', document.getElementById("prob_mult_p").value)
+            localStorage.setItem('prob_mult_b', document.getElementById("prob_mult_b").value)
+            //console.log(document.getElementById("allow_player_diagonls").value);
+            localStorage.setItem('allow_player_diagonls', document.getElementById("allow_player_diagonls").value)
+            localStorage.setItem('allow_monster_diagonls', document.getElementById("allow_monster_diagonls").value)
+
+            //console.log("bla");
+            window.location.href = "game.html";
+        })
+    </script>
+
+</body>
+
+</html>

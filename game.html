@@ -17,14 +17,14 @@
 <body>
     <h1>Purple People Eaters
     </h1>
-    <h2>A remake of the 1980's Acorn game Purple People Eaters - an alpha version</h2>
+    <h2>A remake of the 1980's Acorn game Purple People Eaters - a beta version</h2>
     <h3>Use the arrows to move, do not let the monsters get to you. Lock the monsters using the boxes. Press "p" to
         pause. Press "s" to turn on and of the sound</h3>
     <h4 id="timer">Time: 00:00</h4>
     <div class="grid">
     </div>
-    <a href="PPE.html">Back to settings</a>
-    <a href="game.html">Restart</a>
+    <button id="back">Back to settings</button>
+    <button id="restart">Restart</button>
     <h2 class="win_lose"></h2>
     <h1 class="pause"></h1>
     <h3 class="contin"></h3>
@@ -36,6 +36,10 @@
         const pause_lable = document.querySelector('.pause')
         const contin = document.querySelector('.contin')
         const time = document.getElementById("timer")
+        const back_b = document.getElementById('back')
+        const restart = document.getElementById('restart')
+        back_b.addEventListener("click",go_back)
+        restart.addEventListener("click",restart_fun)
         const squre_size = Number(localStorage.getItem("squre_size"))
         //console.log(localStorage.getItem("squre_size"))
         const n_of_rows = Number(localStorage.getItem("n_of_rows"))
@@ -378,6 +382,12 @@
         }
         function test_cumsum() {
             console.log(cum_sum([0, 1, 2, 3, 4, 5]))
+        }
+        function go_back(e) {
+            history.back()
+        }
+        function restart_fun(e) {
+            window.location.href = "game.html";
         }
 
 

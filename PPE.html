@@ -93,10 +93,14 @@
         <div>
             <button type="submit">Play</button>
         </div>
+        <div>
+            <button id="set_default">Set Default</button>
+        </div>
     </form>
 
     <script>
         const form = document.getElementById('form')
+        const set_default = document.getElementById('set_default')
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             //console.log("bla");
@@ -116,6 +120,21 @@
             //console.log("bla");
             window.location.href = "game.html";
         })
+        set_default.addEventListener("click", set_default_fun)
+        function set_default_fun(e) {
+            e.preventDefault();
+            document.getElementById("n_of_monsters").value = "2"
+            document.getElementById("monster_speed").value = "2"
+            document.getElementById("n_of_rows").value = "20"
+            document.getElementById("n_of_columns").value = "40"
+            document.getElementById("squere_size").value = "30"
+            document.getElementById("present_of_boxes").value = "20"
+            document.getElementById("prob_mult_p").value = "2.5"
+            document.getElementById("prob_mult_b").value = "0"
+            document.getElementById("allow_player_diagonls").value = "true"
+            document.getElementById("allow_monster_diagonls").value = "true"
+            document.getElementById("player_slownes").value = "0"
+        }//
     </script>
 
 </body>

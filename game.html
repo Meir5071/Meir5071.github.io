@@ -37,8 +37,8 @@
         const time = document.getElementById("timer")
         const back_b = document.getElementById('back')
         const restart = document.getElementById('restart')
-        back_b.addEventListener("click",go_back)
-        restart.addEventListener("click",restart_fun)
+        back_b.addEventListener("click", go_back)
+        restart.addEventListener("click", restart_fun)
         const squre_size = Number(localStorage.getItem("squre_size"))
         //console.log(localStorage.getItem("squre_size"))
         const n_of_rows = Number(localStorage.getItem("n_of_rows"))
@@ -48,6 +48,26 @@
         const present_of_boxes = Number(localStorage.getItem("present_of_boxes")) / 100
         const prob_mult_p = Number(localStorage.getItem("prob_mult_p"))
         const prob_mult_b = Number(localStorage.getItem("prob_mult_b"))
+        const eqSet = (xs, ys) => xs.size === ys.size && [...xs].every((x) => ys.has(x));
+
+        const UP = new Set(["ArrowUp"])
+        const DOWN = new Set(["ArrowDown"])
+        const RIGHT = new Set(["ArrowRight"])
+        const LEFT = new Set(["ArrowLeft"])
+
+        const LEFT_UP_1 = new Set(["Home"])
+        const LEFT_DOWN_1 = new Set(["End"])
+        const RIGHT_UP_1 = new Set(["PageUp"])
+        const RIGHT_DOWN_1 = new Set(["PageDown"])
+
+        const LEFT_UP_2 = new Set(["ArrowUp", "ArrowLeft"])
+        const LEFT_DOWN_2 = new Set(["ArrowDown", "ArrowLeft"])
+        const RIGHT_UP_2 = new Set(["ArrowUp", "ArrowRight"])
+        const RIGHT_DOWN_2 = new Set(["ArrowDown", "ArrowRight"])
+        //console.log(UP)
+        //console.log(eqSet(UP,UP2))
+        //console.log(eqSet(UP,DOWN))
+        let keys = new Set([])
         let sound = false
         let monster_sound = new Audio('sounds/monster.mp3')
         let player_sound = new Audio('sounds/Player.mp3')
@@ -81,6 +101,8 @@
         //move_monsters()
         //test_cumsum()
         //test_weighted_random_choice()
+        document.addEventListener('keydown', add_key)
+        document.addEventListener('keyup', delete_key)
         document.addEventListener('keydown', players_move)
         //grid.addEventListener('keydown',players_move)
         timerId = setInterval(move_monsters, monster_slownes)
@@ -199,10 +221,11 @@
             return weights
         }
         function players_move(e) {
-            if (sound) { player_sound.play() }
+            //if (sound) { player_sound.play() }
             //console.log("bla")
             let dir = key_to_dir(e.key)
             if (dir != undefined) {
+                if (sound) { player_sound.play() }
                 e.preventDefault()
                 move_player_dir(dir)
             }
@@ -274,26 +297,31 @@
             set_img(from[0], from[1])
         }
         function key_to_dir(key) {
-            switch (key) {
-                case "ArrowUp":
-                    return [-1, 0]
-                case "ArrowDown":
-                    return [1, 0]
-                case "ArrowRight":
-                    return [0, 1]
-                case "ArrowLeft":
-                    return [0, -1]
+            console.log(keys)
+            if (eqSet(keys, UP)) {
+                return [-1, 0]
+            }
+            if (eqSet(keys, DOWN)) {
+                return [1, 0]
+            }
+            if (eqSet(keys, RIGHT)) {
+                return [0, 1]
+            }
+            if (eqSet(keys, LEFT)) {
+                return [0, -1]
             }
             if (allow_player_diagonls) {
-                switch (key) {
-                    case "Home":
-                        return [-1, -1]
-                    case "End":
-                        return [1, -1]
-                    case "PageDown":
-                        return [1, 1]
-                    case "PageUp":
-                        return [-1, 1]
+                if (eqSet(keys, LEFT_UP_1) || eqSet(keys, LEFT_UP_2)) {
+                    return [-1, -1]
+                }
+                if (eqSet(keys, LEFT_DOWN_1) || eqSet(keys, LEFT_DOWN_2)) {
+                    return [1, -1]
+                }
+                if (eqSet(keys, RIGHT_DOWN_1) || eqSet(keys, RIGHT_DOWN_2)) {
+                    return [1, 1]
+                }
+                if (eqSet(keys, RIGHT_UP_1) || eqSet(keys, RIGHT_UP_2)) {
+                    return [-1, 1]
                 }
             }
             if (key == "p") { pause() }
@@ -387,6 +415,12 @@
         }
         function restart_fun(e) {
             window.location.href = "game.html";
+        }
+        function add_key(e) {
+            keys.add(e.key)
+        }
+        function delete_key(e) {
+            keys.delete(e.key)
         }
 
 

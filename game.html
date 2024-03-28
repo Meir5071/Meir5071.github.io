@@ -17,13 +17,15 @@
 <body>
     <h1>Purple People Eaters
     </h1>
-    <h3>Use the arrows to move, do not let the monsters get to you. Lock the monsters using the boxes. Press "p" to
-        pause. Press "s" to turn on and of the sound.</h3>
+    <h3>Use the arrows to move. Two at the same time, or Home, Page Up, Page Up and End for diagonals. Do not let the
+        monsters get to you! Lock the monsters using the boxes.</h3>
     <h4 id="timer">Time: 00:00</h4>
     <div class="grid">
     </div>
-    <button id="back">Back to settings</button>
-    <button id="restart">Restart</button>
+    <button id="back">Back to settings (press "b")</button>
+    <button id="restart">Restart (press "r")</button>
+    <button id="pause">Pause (press "p")</button>
+    <button id="sound">Turn on the sound (press "s")</button>
     <h2 class="win_lose"></h2>
     <h1 class="pause"></h1>
     <h3 class="contin"></h3>
@@ -37,7 +39,11 @@
         const time = document.getElementById("timer")
         const back_b = document.getElementById('back')
         const restart = document.getElementById('restart')
+        const pause_b = document.getElementById('pause')
+        const sound_b = document.getElementById('sound')
         back_b.addEventListener("click", go_back)
+        pause_b.addEventListener("click", pause)
+        sound_b.addEventListener("click", sound_fun)
         restart.addEventListener("click", restart_fun)
         const squre_size = Number(localStorage.getItem("squre_size"))
         //console.log(localStorage.getItem("squre_size"))
@@ -123,7 +129,7 @@
                         time_min_1 = 0
                         time_min_10++
                         if (time_min_10 == 10) {
-                            time_min_10 = 0
+                            //time_min_10 = 0
                         }
                     }
                 }
@@ -301,7 +307,7 @@
             set_img(from[0], from[1])
         }
         function key_to_dir(key) {
-            console.log(keys)
+            //console.log(keys)
             if (eqSet(keys, UP)) {
                 return [-1, 0]
             }
@@ -328,8 +334,10 @@
                     return [-1, 1]
                 }
             }
-            if (key == "p") { pause() }
-            if (key == "s") { sound = !(sound) }
+            if (key == "p") { pause(key) }
+            if (key == "b") { go_back(key) }
+            if (key == "r") { restart_fun(key) }
+            if (key == "s") { sound_fun(key) }
         }
         function move_player_dir(dir) {
             player_pos = move_and_push(player_pos, dir, true)
@@ -385,24 +393,73 @@
         function norm2(a) {
             return a[0] * a[0] + a[1] * a[1]
         }
-        function pause() {
+        function pause(e) {
             document.removeEventListener('keydown', players_move)
             clearInterval(timerId)
             clearInterval(timer_time)
+            pause_b.removeEventListener("click", pause)
+            pause_b.innerHTML = 'Continue (press "p")'
             pause_lable.innerHTML = "Pause"
-            contin.innerHTML = "Press 'p' to continiue"
+            contin.innerHTML = "Press 'p' to continiue."
+            pause_b.addEventListener("click", stop_pause)
             document.addEventListener("keydown", stop_pause)
         }
         function stop_pause(e) {
-            if (e.key == "p") {
+            if (e.type == 'click') {
                 pause_lable.innerHTML = ""
                 contin.innerHTML = ""
+                pause_b.innerHTML = 'Pause (press "p")'
                 document.removeEventListener("keydown", stop_pause)
+                pause_b.addEventListener("click", pause)
+                pause_b.removeEventListener("click", stop_pause)
                 document.addEventListener('keydown', players_move)
                 timerId = setInterval(move_monsters, monster_slownes)
                 timer_time = setInterval(timer, 1000)
             }
+
+            if (e.key == "p") {
+                pause_lable.innerHTML = ""
+                contin.innerHTML = ""
+                pause_b.innerHTML = 'Pause (press "p")'
+                document.removeEventListener("keydown", stop_pause)
+                pause_b.addEventListener("click", pause)
+                pause_b.removeEventListener("click", stop_pause)
+                document.addEventListener('keydown', players_move)
+                timerId = setInterval(move_monsters, monster_slownes)
+                timer_time = setInterval(timer, 1000)
+            }
+            if (e.key == "b") { go_back(e.key) }
+            if (e.key == "r") { restart_fun(e.key) }
+            if (e.key == "s") { sound_fun(e.key) }
         }
+        function go_back(e) {
+            if (confirm("Are you sure you want leave this game?")) {
+                history.back()
+            }
+        }
+        function restart_fun(e) {
+            if (confirm("Are you sure you want leave this game?")) {
+                window.location.href = "game.html";
+            }
+        }
+        function sound_fun(e) {
+            sound = !(sound)
+            if (sound_b.innerHTML == 'Turn on the sound (press "s")') {
+                sound_b.innerHTML = 'Turn off the sound (press "s")'
+            }
+            else {
+                sound_b.innerHTML = 'Turn on the sound (press "s")'
+            }
+        }
+        function add_key(e) {
+            keys.add(e.key)
+        }
+        function delete_key(e) {
+            keys.delete(e.key)
+        }
+
+
+
 
         //tests
 
@@ -413,18 +470,6 @@
         }
         function test_cumsum() {
             console.log(cum_sum([0, 1, 2, 3, 4, 5]))
-        }
-        function go_back(e) {
-            history.back()
-        }
-        function restart_fun(e) {
-            window.location.href = "game.html";
-        }
-        function add_key(e) {
-            keys.add(e.key)
-        }
-        function delete_key(e) {
-            keys.delete(e.key)
         }
 
 

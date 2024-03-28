@@ -54,6 +54,7 @@
         const present_of_boxes = Number(localStorage.getItem("present_of_boxes")) / 100
         const prob_mult_p = Number(localStorage.getItem("prob_mult_p"))
         const prob_mult_b = Number(localStorage.getItem("prob_mult_b"))
+        const player_slownes = Number(localStorage.getItem("player_slownes"))
         const eqSet = (xs, ys) => xs.size === ys.size && [...xs].every((x) => ys.has(x));
 
         const UP = new Set(["ArrowUp"])
@@ -99,12 +100,15 @@
         //console.log(map)
         let monsters = init_monsters()
         let timerId
+        //let player_timer
         let timer_time
         display_map()
         let time_sec_1 = 0
         let time_sec_10 = 0
         let time_min_1 = 0
         let time_min_10 = 0
+        let player_dir
+        let set_t = true
         //move_monsters()
         //test_cumsum()
         //test_weighted_random_choice()
@@ -118,18 +122,20 @@
         //function play_monster(){monster_sound.play()}
 
         function timer() {
-            time_sec_1++
-            if (time_sec_1 == 10) {
-                time_sec_1 = 0
-                time_sec_10++
-                if (time_sec_10 == 6) {
-                    time_sec_10 = 0
-                    time_min_1++
-                    if (time_min_1 == 10) {
-                        time_min_1 = 0
-                        time_min_10++
-                        if (time_min_10 == 10) {
-                            //time_min_10 = 0
+            if (is_acitve) {
+                time_sec_1++
+                if (time_sec_1 == 10) {
+                    time_sec_1 = 0
+                    time_sec_10++
+                    if (time_sec_10 == 6) {
+                        time_sec_10 = 0
+                        time_min_1++
+                        if (time_min_1 == 10) {
+                            time_min_1 = 0
+                            time_min_10++
+                            if (time_min_10 == 10) {
+                                //time_min_10 = 0
+                            }
                         }
                     }
                 }
@@ -235,9 +241,13 @@
             let dir = key_to_dir(e.key)
             if (dir != undefined) {
                 is_acitve = true
-                if (sound) { player_sound.play() }
+                //if (sound) { player_sound.play() }
                 e.preventDefault()
-                move_player_dir(dir)
+                player_dir = dir;
+                if (set_t) {
+                    set_t = false
+                    setTimeout(move_player_dir, player_slownes)
+                }
             }
         }
         function get_ind(i, j) { return i * n_of_columns + j }
@@ -339,8 +349,12 @@
             if (key == "r") { restart_fun(key) }
             if (key == "s") { sound_fun(key) }
         }
-        function move_player_dir(dir) {
-            player_pos = move_and_push(player_pos, dir, true)
+        function move_player_dir() {
+            //clearInterval(player_timer)
+            //console.log("bla")
+            set_t = true
+            if (sound) { player_sound.play() }
+            player_pos = move_and_push(player_pos, player_dir, true)
         }
         function move_and_push(from, dir, p) {
             let i = from[0] + dir[0]
@@ -357,6 +371,8 @@
         }
         function lose() {
             document.removeEventListener('keydown', players_move)
+            pause_b.removeEventListener("click", pause)
+            document.addEventListener("keydown", end_time)
             clearInterval(timerId)
             clearInterval(timer_time)
             win_lose.innerHTML = "You lost!"
@@ -380,6 +396,8 @@
         function win() {
             //console.log("bla")
             document.removeEventListener('keydown', players_move)
+            pause_b.removeEventListener("click", pause)
+            document.addEventListener("keydown", end_time)
             clearInterval(timerId)
             clearInterval(timer_time)
             win_lose.innerHTML = "You won!"
@@ -456,6 +474,11 @@
         }
         function delete_key(e) {
             keys.delete(e.key)
+        }
+        function end_time(e) {
+            if (e.key == "b") { go_back(e.key) }
+            if (e.key == "r") { restart_fun(e.key) }
+            if (e.key == "s") { sound_fun(e.key) }
         }
 
 

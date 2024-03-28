@@ -26,7 +26,7 @@
     <h1>Purple People Eaters
     </h1>
     <h2>A remake of the 1980's Acorn game "Purple People Eaters" - a beta version</h2>
-    <h2>Chose you settings and click play </h2>
+    <h2>Choose your settings and click "play". </h2>
     <form id="form">
         <div class="row">
             <div class="column" >
@@ -35,15 +35,15 @@
                     <input type="number" id="n_of_monsters" name="n_of_monsters" value="2">
                 </p>
                 <p>
-                    <label id="b">Monsters speed (Hz):</label>
+                    <label id="b">Monsters' speed (Hz):</label>
                     <input type="text" id="monster_speed" name="monster_speed" value="2">
                 </p>
                 <p>
-                    <label id="c">Monsters chaising multiplayer:</label>
+                    <label id="c">Monsters' chasing multiplier:</label>
                     <input type="text" id="prob_mult_p" name="prob_mult_p" value="2.5">
                 </p>
                 <p>
-                    <label id="d">Monsters blocking multiplayer:</label>
+                    <label id="d">Monsters' blocking multiplier:</label>
                     <input type="number" id="prob_mult_b" name="prob_mult_b" value="0">
                 </p>
             </div>
@@ -53,11 +53,11 @@
                     <input type="number" id="n_of_rows" name="n_of_rows" value="20">
                 </p>
                 <p>
-                    <label id="f">Number of collumns:</label>
+                    <label id="f">Number of columns:</label>
                     <input type="number" id="n_of_columns" name="n_of_columns" value="40">
                 </p>
                 <p>
-                    <label id="g">Squere size (px):</label>
+                    <label id="g">Square size (px):</label>
                     <input type="number" id="squere_size" name="squere_size" value="30">
                 </p>
 
@@ -65,19 +65,24 @@
 
             <div class="column" >
                 <p>
-                    <label id="h">Precent of boxes (%):</label>
+                    <label id="h">Percent of boxes (%):</label>
                     <input type="number" id="present_of_boxes" name="present_of_boxes" value="20">
 
                 </p>
                 <p>
-                    <label  id="i">Allow player move diagonly:</label>
+                    <label id="k">Player's movment delay (ms):</label>
+                    <input type="number" id="player_slownes" name="player_slownes" value="0">
+
+                </p>
+                <p>
+                    <label  id="i">Allow player to move diagonally:</label>
                     <select name="allow_player_diagonls" id="allow_player_diagonls">
                         <option value="true">yes</option>
                         <option value="false">no</option>
                     </select>
                 </p>
                 <p>
-                    <label id="j">Allow monsters move diagonly:</label>
+                    <label id="j">Allow monsters to move diagonally:</label>
                     <select name="allow_monster_diagonls" id="allow_monster_diagonls">
                         <option value="true">yes</option>
                         <option value="false">no</option>
@@ -106,6 +111,7 @@
             //console.log(document.getElementById("allow_player_diagonls").value);
             localStorage.setItem('allow_player_diagonls', document.getElementById("allow_player_diagonls").value)
             localStorage.setItem('allow_monster_diagonls', document.getElementById("allow_monster_diagonls").value)
+            localStorage.setItem('player_slownes', document.getElementById("player_slownes").value)
 
             //console.log("bla");
             window.location.href = "game.html";

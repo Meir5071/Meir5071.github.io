@@ -67,6 +67,7 @@
         //console.log(UP)
         //console.log(eqSet(UP,UP2))
         //console.log(eqSet(UP,DOWN))
+        let is_acitve = false
         let keys = new Set([])
         let sound = false
         let monster_sound = new Audio('sounds/monster.mp3')
@@ -184,16 +185,18 @@
         }
         function move_monsters() {
             //console.log("bla")
-            let w = true
-            if (sound) { monster_sound.play() }
-            for (let i = 0; i < n_of_monsters; i++) {
-                // console.log(i)
-                w = w && is_locked(i)
-                move_monster(i)
+            if (is_acitve) {
+                let w = true
+                if (sound) { monster_sound.play() }
+                for (let i = 0; i < n_of_monsters; i++) {
+                    // console.log(i)
+                    w = w && is_locked(i)
+                    move_monster(i)
+                }
+                //console.log("bla")
+                //check_victory()
+                if (w) { win() }
             }
-            //console.log("bla")
-            //check_victory()
-            if (w) { win() }
         }
         function move_monster(i) {
             let weights = get_wheights(i)
@@ -225,6 +228,7 @@
             //console.log("bla")
             let dir = key_to_dir(e.key)
             if (dir != undefined) {
+                is_acitve = true
                 if (sound) { player_sound.play() }
                 e.preventDefault()
                 move_player_dir(dir)

@@ -79,6 +79,9 @@
         let sound = false
         let monster_sound = new Audio('sounds/monster.mp3')
         let player_sound = new Audio('sounds/Player.mp3')
+        let win_s = new Audio('sounds/win.mp3')
+        let lose_s = new Audio('sounds/lose.mp3')
+        win_s.volume = 0.5
         monster_sound.volume = 0.2
         player_sound.volume = 0.2
         //monster_sound.play()
@@ -376,6 +379,7 @@
             clearInterval(timerId)
             clearInterval(timer_time)
             win_lose.innerHTML = "You lost!"
+            if (sound) { lose_s.play() }
         }
         function is_locked(ind) {
             //console.log("bla")
@@ -401,6 +405,7 @@
             clearInterval(timerId)
             clearInterval(timer_time)
             win_lose.innerHTML = "You won!"
+            if (sound) { win_s.play() }
         }
         function sum(a, b) {
             return [a[0] + b[0], a[1] + b[1]]

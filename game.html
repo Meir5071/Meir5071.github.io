@@ -11,6 +11,35 @@
             flex-wrap: wrap;
             border-style: solid;
         }
+
+        #control {
+            float: left;
+            width: 10%;
+            /*padding: 10px;*/
+        }
+
+        #game_grid {
+            float: left;
+            width: 90%;
+            /*padding: 10px;*/
+        }
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+        .button {
+            background-color: purple;
+            border: none;
+            color: white;
+            padding: 5px 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -19,16 +48,40 @@
     </h1>
     <h3>Use the arrows to move. Two at the same time, or Home, Page Up, Page Up and End for diagonals. Do not let the
         monsters get to you! Lock the monsters using the boxes.</h3>
-    <h4 id="timer">Time: 00:00</h4>
-    <div class="grid">
+    <div class="row">
+        <div class="column" id="control">
+            <p>
+                <button class="button" id="back">Back to settings (press "b")</button>
+            </p>
+            <p>
+                <button class="button" id="restart">Restart (press "r")</button>
+            </p>
+            <p>
+                <button class="button" id="pause">Pause (press "p")</button>
+            </p>
+            <p>
+                <button class="button" id="sound">Turn on the sound (press "s")</button>
+            </p>
+            <p>
+            <h2 id="timer">Time: 00:00</h2>
+            </p>
+            <p>
+            <h1 class="win_lose"></h1>
+            </p>
+            <p>
+            <h1 class="pause"></h1>
+            </p>
+            <p>
+            <h3 class="contin"></h3>
+            </p>
+        </div>
+        <div class="column" id="game_grid">
+            <p>
+            <div class="grid">
+            </div>
+            </p>
+        </div>
     </div>
-    <button id="back">Back to settings (press "b")</button>
-    <button id="restart">Restart (press "r")</button>
-    <button id="pause">Pause (press "p")</button>
-    <button id="sound">Turn on the sound (press "s")</button>
-    <h2 class="win_lose"></h2>
-    <h1 class="pause"></h1>
-    <h3 class="contin"></h3>
     <script>
         //list all card options
 
@@ -423,7 +476,7 @@
             pause_b.removeEventListener("click", pause)
             pause_b.innerHTML = 'Continue (press "p")'
             pause_lable.innerHTML = "Pause"
-            contin.innerHTML = "Press 'p' to continiue."
+            //contin.innerHTML = "Press 'p' to continiue."
             pause_b.addEventListener("click", stop_pause)
             document.addEventListener("keydown", stop_pause)
         }

@@ -23,11 +23,13 @@
             width: 90%;
             /*padding: 10px;*/
         }
+
         .row:after {
-          content: "";
-          display: table;
-          clear: both;
+            content: "";
+            display: table;
+            clear: both;
         }
+
         .button {
             background-color: purple;
             border: none;
@@ -40,7 +42,8 @@
             margin: 4px 2px;
             cursor: pointer;
         }
-        #bod{
+
+        #bod {
             background-color: rgb(126, 211, 250);
         }
     </style>
@@ -63,7 +66,7 @@
                 <button class="button" id="pause">Pause (press "p")</button>
             </p>
             <p>
-                <button class="button" id="sound">Turn on the sound (press "s")</button>
+                <button class="button" id="sound">Turn on the sound (press "n")</button>
             </p>
             <p>
             <h2 id="timer">Time: 00:00</h2>
@@ -127,6 +130,18 @@
         const LEFT_DOWN_2 = new Set(["ArrowDown", "ArrowLeft"])
         const RIGHT_UP_2 = new Set(["ArrowUp", "ArrowRight"])
         const RIGHT_DOWN_2 = new Set(["ArrowDown", "ArrowRight"])
+
+        const UP_p2 = new Set(["w"])
+        const DOWN_p2 = new Set(["s"])
+        const RIGHT_p2 = new Set(["d"])
+        const LEFT_p2 = new Set(["a"])
+
+        const LEFT_UP_p2 = new Set(["w", "a"])
+        const LEFT_DOWN_p2 = new Set(["s", "a"])
+        const RIGHT_UP_p2 = new Set(["w", "d"])
+        const RIGHT_DOWN_p2 = new Set(["s", "d"])
+
+        const number_of_players = localStorage.getItem("number_of_players")
         //console.log(UP)
         //console.log(eqSet(UP,UP2))
         //console.log(eqSet(UP,DOWN))
@@ -153,7 +168,18 @@
         else { allow_monster_diagonls = false }
         const dirs = init_dirs()
         let board = []
-        let player_pos = [Math.floor(n_of_rows / 2), Math.floor(n_of_columns / 2)]
+        let player_1_e = true
+        let player_2_e = false
+        if (number_of_players == "2") {
+            player_2_e = true
+        }
+        let player_1_pos = [Math.floor(n_of_rows / 2), Math.floor(n_of_columns / 2)]
+        if (player_2_e) {
+            player_1_pos = [Math.floor(n_of_rows / 2) + 1, Math.floor(n_of_columns / 2) + 1]
+        }
+        let player_2_pos = [Math.floor(n_of_rows / 2) - 1, Math.floor(n_of_columns / 2) - 1]
+        let player_2_m
+        let player_1_m
         //console.log([10,20]===player_pos)
         let map = init_map()
         //console.log(map)
@@ -213,7 +239,7 @@
             for (let i = 0; i < n_of_rows; i++) {
                 new_map.push([])
                 for (let j = 0; j < n_of_columns; j++) {
-                    if ([i, j].toString() == player_pos.toString()) { new_map[i].push(3) }
+                    if (([i, j].toString() == player_1_pos.toString()) || (([i, j].toString() == player_2_pos.toString())&&player_2_e)) { new_map[i].push(3) }
                     else {
                         if (Math.random() < present_of_boxes) {
                             new_map[i].push(1)
@@ -280,11 +306,15 @@
             let weights = []
             for (let i = 0; i < dirs.length; i++) {
                 //console.log(1>2)
-                if (norm2(dif(player_pos, monsters[ind])) > norm2(dif(player_pos, sum(monsters[ind], dirs[i])))) {
+                weights.push(1)
+                if ((norm2(dif(player_1_pos, monsters[ind])) > norm2(dif(player_1_pos, sum(monsters[ind], dirs[i])))) && player_1_e) {
                     //console.log("bla")
-                    weights.push(prob_mult_p)
+                    weights[i] = prob_mult_p * weights[i]
                 }
-                else { weights.push(1) }
+                if ((norm2(dif(player_2_pos, monsters[ind])) > norm2(dif(player_2_pos, sum(monsters[ind], dirs[i])))) && player_2_e) {
+                    //console.log("bla")
+                    weights[i] = prob_mult_p * weights[i]
+                }
                 let loc = sum(monsters[ind], dirs[i])
                 if (!(is_free(loc[0], loc[1]))) {
                     weights[i] = prob_mult_b * weights[i]
@@ -353,7 +383,11 @@
                 if (map[i][j] == 3) {
                     //move_to_blank(monsters[ind],[i,j])
                     //monsters[ind]=[i,j]
-                    lose()
+                    move_to_blank(monsters[ind], [i, j])
+                    monsters[ind] = [i, j]
+                    if ([i, j].toString() == player_1_pos.toString()) { player_1_e = false }
+                    if ([i, j].toString() == player_2_pos.toString()) { player_2_e = false }
+                    if (!(player_1_e || player_2_e)) { lose() }
                 }
                 if (map[i][j] == 0) {
                     move_to_blank(monsters[ind], [i, j])
@@ -377,50 +411,122 @@
         }
         function key_to_dir(key) {
             //console.log(keys)
+            player_2_m = false
+            player_1_m = false
             if (eqSet(keys, UP)) {
+                player_1_m = true
+                //player_2_m = true
                 return [-1, 0]
             }
             if (eqSet(keys, DOWN)) {
+                player_1_m = true
+                //player_2_m = true
                 return [1, 0]
             }
             if (eqSet(keys, RIGHT)) {
+                player_1_m = true
+                //player_2_m = true
                 return [0, 1]
             }
             if (eqSet(keys, LEFT)) {
+                player_1_m = true
+                //player_2_m = true
                 return [0, -1]
             }
             if (allow_player_diagonls) {
                 if (eqSet(keys, LEFT_UP_1) || eqSet(keys, LEFT_UP_2)) {
+                    player_1_m = true
+                    //player_2_m = true
                     return [-1, -1]
                 }
                 if (eqSet(keys, LEFT_DOWN_1) || eqSet(keys, LEFT_DOWN_2)) {
+                    player_1_m = true
+                    //player_2_m = true
                     return [1, -1]
                 }
                 if (eqSet(keys, RIGHT_DOWN_1) || eqSet(keys, RIGHT_DOWN_2)) {
+                    //player_2_m = true
+                    player_1_m = true
                     return [1, 1]
                 }
                 if (eqSet(keys, RIGHT_UP_1) || eqSet(keys, RIGHT_UP_2)) {
+                    //player_2_m = true
+                    player_1_m = true
+                    return [-1, 1]
+                }
+            }
+            if (eqSet(keys, UP_p2)) {
+                //player_1_m = true
+                player_2_m = true
+                return [-1, 0]
+            }
+            if (eqSet(keys, DOWN_p2)) {
+                //player_1_m = true
+                player_2_m = true
+                return [1, 0]
+            }
+            if (eqSet(keys, RIGHT_p2)) {
+                //player_1_m = true
+                player_2_m = true
+                return [0, 1]
+            }
+            if (eqSet(keys, LEFT_p2)) {
+                //player_1_m = true
+                player_2_m = true
+                return [0, -1]
+            }
+            if (allow_player_diagonls) {
+                if (eqSet(keys, LEFT_UP_p2)) {
+                    //player_1_m = true
+                    player_2_m = true
+                    return [-1, -1]
+                }
+                if (eqSet(keys, LEFT_DOWN_p2)) {
+                    //player_1_m = true
+                    player_2_m = true
+                    return [1, -1]
+                }
+                if (eqSet(keys, RIGHT_DOWN_p2)) {
+                    player_2_m = true
+                    //player_1_m = true
+                    return [1, 1]
+                }
+                if (eqSet(keys, RIGHT_UP_p2)) {
+                    player_2_m = true
+                    //player_1_m = true
                     return [-1, 1]
                 }
             }
             if (key == "p") { pause(key) }
             if (key == "b") { go_back(key) }
             if (key == "r") { restart_fun(key) }
-            if (key == "s") { sound_fun(key) }
+            if (key == "n") { sound_fun(key) }
         }
         function move_player_dir() {
             //clearInterval(player_timer)
             //console.log("bla")
             set_t = true
             if (sound) { player_sound.play() }
-            player_pos = move_and_push(player_pos, player_dir, true)
+            if (player_1_m && player_1_e) { player_1_pos = move_and_push(player_1_pos, player_dir, 1) }
+            if (player_2_m && player_2_e) { player_2_pos = move_and_push(player_2_pos, player_dir, 2) }
         }
         function move_and_push(from, dir, p) {
             let i = from[0] + dir[0]
             let j = from[1] + dir[1]
             if (is_inside(i, j)) {
-                if ((map[i][j] == 2) && p) { lose() }
-                if (map[i][j] == 1) { move_and_push([i, j], dir, false) }
+                if ((map[i][j] == 2) && (p == 1)) {
+                    move_to_blank([i, j], from)
+                    move_to_blank(from, [i, j])
+                    player_1_e = false
+                    if (!(player_1_e || player_2_e)) { lose() }
+                }
+                if ((map[i][j] == 2) && (p == 2)) {
+                    move_to_blank([i, j], from)
+                    move_to_blank(from, [i, j])
+                    player_2_e = false
+                    if (!(player_1_e || player_2_e)) { lose() }
+                }
+                if (map[i][j] == 1) { move_and_push([i, j], dir, 0) }
                 if (map[i][j] == 0) {
                     move_to_blank(from, [i, j])
                     return [i, j]
@@ -509,7 +615,7 @@
             }
             if (e.key == "b") { go_back(e.key) }
             if (e.key == "r") { restart_fun(e.key) }
-            if (e.key == "s") { sound_fun(e.key) }
+            if (e.key == "n") { sound_fun(e.key) }
         }
         function go_back(e) {
             if (confirm("Are you sure you want leave this game?")) {
@@ -523,11 +629,11 @@
         }
         function sound_fun(e) {
             sound = !(sound)
-            if (sound_b.innerHTML == 'Turn on the sound (press "s")') {
-                sound_b.innerHTML = 'Turn off the sound (press "s")'
+            if (sound_b.innerHTML == 'Turn on the sound (press "n")') {
+                sound_b.innerHTML = 'Turn off the sound (press "n")'
             }
             else {
-                sound_b.innerHTML = 'Turn on the sound (press "s")'
+                sound_b.innerHTML = 'Turn on the sound (press "n")'
             }
         }
         function add_key(e) {
@@ -539,7 +645,7 @@
         function end_time(e) {
             if (e.key == "b") { go_back(e.key) }
             if (e.key == "r") { restart_fun(e.key) }
-            if (e.key == "s") { sound_fun(e.key) }
+            if (e.key == "n") { sound_fun(e.key) }
         }
 
 

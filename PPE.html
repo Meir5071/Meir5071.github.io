@@ -106,10 +106,17 @@
 
                 </p>
                 <p>
-                    <label  id="i">Allow player to move diagonally:</label>
+                    <label  id="i">Allow players to move diagonally:</label>
                     <select name="allow_player_diagonls" id="allow_player_diagonls">
                         <option value="true">yes</option>
                         <option value="false">no</option>
+                    </select>
+                </p>
+                <p>
+                    <label  id="l">Number of players:</label>
+                    <select name="number_of_players" id="number_of_players">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
                     </select>
                 </p>
             </div>
@@ -138,6 +145,7 @@
             localStorage.setItem('allow_player_diagonls', document.getElementById("allow_player_diagonls").value)
             localStorage.setItem('allow_monster_diagonls', document.getElementById("allow_monster_diagonls").value)
             localStorage.setItem('player_slownes', document.getElementById("player_slownes").value)
+            localStorage.setItem('number_of_players', document.getElementById("number_of_players").value)
 
             //console.log("bla");
             window.location.href = "game.html";
@@ -156,6 +164,7 @@
             document.getElementById("allow_player_diagonls").value = "true"
             document.getElementById("allow_monster_diagonls").value = "true"
             document.getElementById("player_slownes").value = "0"
+            document.getElementById("number_of_players").value = "1"
         }//
     </script>
 

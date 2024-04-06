@@ -142,6 +142,28 @@
         const RIGHT_DOWN_p2 = new Set(["s", "d"])
 
         const number_of_players = localStorage.getItem("number_of_players")
+        let box_i
+        let player_i
+        let monster_i
+        if (localStorage.getItem("box_g")=="old") {
+            box_i="images/box2.png"
+        }
+        else {
+            box_i="images/box.png"
+        }
+        if (localStorage.getItem("player_g")=="old") {
+            //console.log("bla")
+            player_i="images/player2.png"
+        }
+        else {
+            player_i="images/player.png"
+        }
+        if (localStorage.getItem("monster_g")=="old") {
+            monster_i="images/monster2.jpg"
+        }
+        else {
+            monster_i="images/monster.png"
+        }
         //console.log(UP)
         //console.log(eqSet(UP,UP2))
         //console.log(eqSet(UP,DOWN))
@@ -345,11 +367,11 @@
                 case 0:
                     return 'images/blank.png';
                 case 1:
-                    return 'images/box.png';
+                    return box_i;
                 case 2:
-                    return 'images/monster.png';
+                    return monster_i;
                 case 3:
-                    return 'images/player.png';
+                    return player_i;
             }
         }
         function randomInt(max) {

@@ -10,7 +10,7 @@
         
         .column {
           float: left;
-          width: 33%;
+          width: 25%;
           /*padding: 10px;*/
         }
         
@@ -73,7 +73,7 @@
                 </p>
                 <p>
                     <label id="d">Monsters' blocking multiplier:</label>
-                    <input type="number" id="prob_mult_b" name="prob_mult_b" value="0">
+                    <input type="text" id="prob_mult_b" name="prob_mult_b" value="0">
                 </p>
             </div>
             <div class="column" >
@@ -120,6 +120,31 @@
                     </select>
                 </p>
             </div>
+            <div class="column" >
+                <p><h3>Graphics</h3></p>
+                <p>
+                    <label id="m">Monsters:</label>
+                    <select name="monster_g" id="monster_g">
+                        <option value="new">new</option>
+                        <option value="old">classical</option>
+                    </select>
+
+                </p>
+                <p>
+                    <label  id="n">Boxes:</label>
+                    <select name="box_g" id="box_g">
+                        <option value="new">new</option>
+                        <option value="old">classical</option>
+                    </select>
+                </p>
+                <p>
+                    <label  id="o">Players:</label>
+                    <select name="player_g" id="player_g">
+                        <option value="new">new</option>
+                        <option value="old">classical</option>
+                    </select>
+                </p>
+            </div>
         </div>
         <div id="buttons">
             <button class="button" type="submit">Play</button>
@@ -146,6 +171,9 @@
             localStorage.setItem('allow_monster_diagonls', document.getElementById("allow_monster_diagonls").value)
             localStorage.setItem('player_slownes', document.getElementById("player_slownes").value)
             localStorage.setItem('number_of_players', document.getElementById("number_of_players").value)
+            localStorage.setItem('player_g', document.getElementById("player_g").value)
+            localStorage.setItem('monster_g', document.getElementById("monster_g").value)
+            localStorage.setItem('box_g', document.getElementById("box_g").value)
 
             //console.log("bla");
             window.location.href = "game.html";
@@ -165,6 +193,9 @@
             document.getElementById("allow_monster_diagonls").value = "true"
             document.getElementById("player_slownes").value = "0"
             document.getElementById("number_of_players").value = "1"
+            document.getElementById("monster_g").value = "new"
+            document.getElementById("player_g").value = "new"
+            document.getElementById("box_g").value = "new"
         }//
     </script>
 

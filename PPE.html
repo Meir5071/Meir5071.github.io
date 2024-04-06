@@ -7,19 +7,19 @@
     <link rel="icon" href="images/icon.png">
 
     <style>
-        
         .column {
-          float: left;
-          width: 25%;
-          /*padding: 10px;*/
+            float: left;
+            width: 25%;
+            /*padding: 10px;*/
         }
-        
+
         /* Clear floats after the columns */
         .row:after {
-          content: "";
-          display: table;
-          clear: both;
+            content: "";
+            display: table;
+            clear: both;
         }
+
         .button {
             background-color: purple;
             border: none;
@@ -32,25 +32,48 @@
             margin: 4px 2px;
             cursor: pointer;
         }
-        #buttons{
+
+        .button_small {
+            background-color: purple;
+            border: none;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 0px 0px;
+            cursor: pointer;
+        }
+
+        #buttons {
             margin: auto;
             width: 30%;
         }
-        #bod{
+
+        #bod {
             background-color: rgb(126, 211, 250);
         }
-        </style>
+
+        .sel {
+            display: flex;
+            align-items: center;
+
+        }
+    </style>
 </head>
 
-<body id="bod">
+<body id="bod" onload="load()">
     <h1>Purple People Eaters
     </h1>
     <h2>A remake of the 1980's Acorn game "Purple People Eaters" - a beta version</h2>
     <h2>Choose your settings and click "play". </h2>
     <form id="form">
         <div class="row">
-            <div class="column" >
-                <p><h3>Monsters</h3></p>
+            <div class="column">
+                <p>
+                <h3>Monsters</h3>
+                </p>
                 <p>
                     <label id="a">Number of monsters:</label>
                     <input type="number" id="n_of_monsters" name="n_of_monsters" value="2">
@@ -66,7 +89,9 @@
                     <label id="b">Monsters' speed (Hz):</label>
                     <input type="text" id="monster_speed" name="monster_speed" value="2">
                 </p>
-                <p><h4>Advanced</h4></p>
+                <p>
+                <h4>Advanced</h4>
+                </p>
                 <p>
                     <label id="c">Monsters' chasing multiplier:</label>
                     <input type="text" id="prob_mult_p" name="prob_mult_p" value="2.5">
@@ -76,8 +101,10 @@
                     <input type="text" id="prob_mult_b" name="prob_mult_b" value="0">
                 </p>
             </div>
-            <div class="column" >
-                <p><h3>Map</h3></p>
+            <div class="column">
+                <p>
+                <h3>Map</h3>
+                </p>
                 <p>
                     <label id="e">Number of rows:</label>
                     <input type="number" id="n_of_rows" name="n_of_rows" value="20">
@@ -98,51 +125,66 @@
 
             </div>
 
-            <div class="column" >
-                <p><h3>Player</h3></p>
+            <div class="column">
+                <p>
+                <h3>Player</h3>
+                </p>
                 <p>
                     <label id="k">Player's movment delay (ms):</label>
                     <input type="number" id="player_slownes" name="player_slownes" value="0">
 
                 </p>
                 <p>
-                    <label  id="i">Allow players to move diagonally:</label>
+                    <label id="i">Allow players to move diagonally:</label>
                     <select name="allow_player_diagonls" id="allow_player_diagonls">
                         <option value="true">yes</option>
                         <option value="false">no</option>
                     </select>
                 </p>
                 <p>
-                    <label  id="l">Number of players:</label>
+                    <label id="l">Number of players:</label>
                     <select name="number_of_players" id="number_of_players">
                         <option value="1">1</option>
                         <option value="2">2</option>
                     </select>
                 </p>
             </div>
-            <div class="column" >
-                <p><h3>Graphics</h3></p>
+            <div class="column">
                 <p>
+                <h3>Graphics</h3>
+                </p>
+                <p><button class="button_small" id="set_classical">Set classical</button>
+                    <button class="button_small" id="set_new">Set new</button>
+                </p>
+                <p>
+                <div class="sel">
                     <label id="m">Monsters:</label>
                     <select name="monster_g" id="monster_g">
                         <option value="new">new</option>
                         <option value="old">classical</option>
                     </select>
-
+                    <img src="images/monster.png" id="monster_i" height="30px" width="30px">
+                </div>
                 </p>
                 <p>
-                    <label  id="n">Boxes:</label>
+                <div class="sel">
+                    <label id="n">Boxes:</label>
                     <select name="box_g" id="box_g">
                         <option value="new">new</option>
                         <option value="old">classical</option>
                     </select>
+                    <img src="images/box.png" id="box_i" height="30px" width="30px">
+                </div>
                 </p>
                 <p>
-                    <label  id="o">Players:</label>
+                <div class="sel">
+                    <label id="o">Players:</label>
                     <select name="player_g" id="player_g">
                         <option value="new">new</option>
                         <option value="old">classical</option>
                     </select>
+                    <img src="images/player.png" id="player_i" height="30px" width="30px">
+                </div>
                 </p>
             </div>
         </div>
@@ -155,7 +197,22 @@
     <script>
         const form = document.getElementById('form')
         const set_default = document.getElementById('set_default')
+        const set_classical = document.getElementById('set_classical')
+        const set_new = document.getElementById('set_new')
+
+        const player_i = document.getElementById('player_i')
+        const monster_i = document.getElementById('monster_i')
+        const box_i = document.getElementById('box_i')
+
+        const player_g = document.getElementById('player_g')
+        const monster_g = document.getElementById('monster_g')
+        const box_g = document.getElementById('box_g')
+        change_monster_img(1)
+        change_box_img(1)
+        change_player_img(1)
+        //console.log(monster_g.value)
         form.addEventListener("submit", function (e) {
+            //console.log(monster_g.value)
             e.preventDefault();
             //console.log("bla");
             localStorage.setItem('n_of_monsters', document.getElementById("n_of_monsters").value)
@@ -172,15 +229,31 @@
             localStorage.setItem('player_slownes', document.getElementById("player_slownes").value)
             localStorage.setItem('number_of_players', document.getElementById("number_of_players").value)
             localStorage.setItem('player_g', document.getElementById("player_g").value)
+            //console.log(monster_g.value)
             localStorage.setItem('monster_g', document.getElementById("monster_g").value)
             localStorage.setItem('box_g', document.getElementById("box_g").value)
 
             //console.log("bla");
+            //alert("bla")
             window.location.href = "game.html";
         })
+        addEventListener("popstate", load)
         set_default.addEventListener("click", set_default_fun)
+        set_classical.addEventListener("click", set_classical_fun)
+        set_new.addEventListener("click", set_new_fun)
+
+        monster_g.addEventListener("change", change_monster_img)
+        box_g.addEventListener("change", change_box_img)
+        player_g.addEventListener("change", change_player_img)
+        function load() {
+            //console.log("monster_g.value")
+            change_monster_img(1)
+            change_box_img(1)
+            change_player_img(1)
+        }
         function set_default_fun(e) {
             e.preventDefault();
+            //console.log(monster_g.value)
             document.getElementById("n_of_monsters").value = "2"
             document.getElementById("monster_speed").value = "2"
             document.getElementById("n_of_rows").value = "20"
@@ -197,6 +270,51 @@
             document.getElementById("player_g").value = "new"
             document.getElementById("box_g").value = "new"
         }//
+        function set_classical_fun(e) {
+            e.preventDefault();
+            document.getElementById("monster_g").value = "old"
+            document.getElementById("player_g").value = "old"
+            document.getElementById("box_g").value = "old"
+            change_monster_img(e)
+            change_box_img(e)
+            change_player_img(e)
+        }
+        function set_new_fun(e) {
+            e.preventDefault();
+            document.getElementById("monster_g").value = "new"
+            document.getElementById("player_g").value = "new"
+            document.getElementById("box_g").value = "new"
+            change_monster_img(e)
+            change_box_img(e)
+            change_player_img(e)
+        }
+        function change_box_img(e) {
+            if (box_g.value == "old") {
+                box_i.src = "images/box2.png"
+            }
+            else {
+                box_i.src = "images/box.png"
+            }
+        }
+        function change_monster_img(e) {
+            //console.log(monster_g.value)
+            //console.log(box_g.value)
+            //console.log(player_g.value)
+            if (monster_g.value == "old") {
+                monster_i.src = "images/monster2.jpg"
+            }
+            else {
+                monster_i.src = "images/monster.png"
+            }
+        }
+        function change_player_img(e) {
+            if (player_g.value == "old") {
+                player_i.src = "images/player2.png"
+            }
+            else {
+                player_i.src = "images/player.png"
+            }
+        }
     </script>
 
 </body>

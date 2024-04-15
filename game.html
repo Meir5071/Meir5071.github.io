@@ -52,8 +52,7 @@
 <body id="bod">
     <h1>Purple People Eaters
     </h1>
-    <h3>Use the arrows to move. Two at the same time, or Home, Page Up, Page Up and End for diagonals, the second player moves with W,A,S,D. Do not let the
-        monsters get to you! Lock the monsters using the boxes.</h3>
+    <h3>Do not let the monsters get to you! Lock the monsters using the boxes.</h3>
     <div class="row">
         <div class="column" id="control">
             <p>
@@ -116,59 +115,105 @@
         const player_slownes = Number(localStorage.getItem("player_slownes"))
         const eqSet = (xs, ys) => xs.size === ys.size && [...xs].every((x) => ys.has(x));
 
-        const UP = new Set(["ArrowUp"])
-        const DOWN = new Set(["ArrowDown"])
-        const RIGHT = new Set(["ArrowRight"])
-        const LEFT = new Set(["ArrowLeft"])
+        const UP = [localStorage.getItem("p1_up_c")]
+        const DOWN =  [localStorage.getItem("p1_down_c")]
+        const RIGHT = [localStorage.getItem("p1_right_c")]
+        const LEFT = [localStorage.getItem("p1_left_c")]
 
-        const LEFT_UP_1 = new Set(["Home"])
-        const LEFT_DOWN_1 = new Set(["End"])
-        const RIGHT_UP_1 = new Set(["PageUp"])
-        const RIGHT_DOWN_1 = new Set(["PageDown"])
+        const LEFT_UP_1 = [localStorage.getItem("p1_up_left_c")]
+        const LEFT_DOWN_1 = [localStorage.getItem("p1_down_left_c")]
+        const RIGHT_UP_1 = [localStorage.getItem("p1_up_right_c")]
+        const RIGHT_DOWN_1 = [localStorage.getItem("p1_down_right_c")]
 
-        const LEFT_UP_2 = new Set(["ArrowUp", "ArrowLeft"])
-        const LEFT_DOWN_2 = new Set(["ArrowDown", "ArrowLeft"])
-        const RIGHT_UP_2 = new Set(["ArrowUp", "ArrowRight"])
-        const RIGHT_DOWN_2 = new Set(["ArrowDown", "ArrowRight"])
+        const LEFT_UP_2 = [localStorage.getItem("p1_up_c"), localStorage.getItem("p1_left_c")]
+        const LEFT_DOWN_2 = [localStorage.getItem("p1_down_c"), localStorage.getItem("p1_left_c")]
+        const RIGHT_UP_2 = [localStorage.getItem("p1_up_c"), localStorage.getItem("p1_right_c")]
+        const RIGHT_DOWN_2 = [localStorage.getItem("p1_down_c"), localStorage.getItem("p1_right_c")]
 
-        const UP_p2 = new Set(["w"])
-        const DOWN_p2 = new Set(["s"])
-        const RIGHT_p2 = new Set(["d"])
-        const LEFT_p2 = new Set(["a"])
+        const UP_p2 = [localStorage.getItem("p2_up_c")]
+        const DOWN_p2 = [localStorage.getItem("p2_down_c")]
+        const RIGHT_p2 = [localStorage.getItem("p2_right_c")]
+        const LEFT_p2 = [localStorage.getItem("p2_left_c")]
 
-        const LEFT_UP_p2 = new Set(["w", "a"])
-        const LEFT_DOWN_p2 = new Set(["s", "a"])
-        const RIGHT_UP_p2 = new Set(["w", "d"])
-        const RIGHT_DOWN_p2 = new Set(["s", "d"])
+        const LEFT_UP_p2_1 = [localStorage.getItem("p2_up_left_c")]
+        const LEFT_DOWN_p2_1 = [localStorage.getItem("p2_down_left_c")]
+        const RIGHT_UP_p2_1 = [localStorage.getItem("p2_up_right_c")]
+        const RIGHT_DOWN_p2_1 = [localStorage.getItem("p2_down_right_c")]
+
+        const LEFT_UP_p2 = [localStorage.getItem("p2_up_c"), localStorage.getItem("p2_left_c")]
+        const LEFT_DOWN_p2 = [localStorage.getItem("p2_down_c"), localStorage.getItem("p2_left_c")]
+        const RIGHT_UP_p2 = [localStorage.getItem("p2_up_c"), localStorage.getItem("p2_right_c")]
+        const RIGHT_DOWN_p2 = [localStorage.getItem("p2_down_c"), localStorage.getItem("p2_right_c")]
+
+        let back_c = localStorage.getItem("back_c")
+        let restart_c = localStorage.getItem("restart_c")
+        let pause_c = localStorage.getItem("pause_c")
+        let sound_c = localStorage.getItem("sound_c")
+        //console.log(back_c=="None")
+        let sound_on
+        let sound_off
+        let pause_on
+        let pause_off
+        if (back_c=="None") {
+            back_b.innerHTML = 'Back to settings'
+        }
+        else{
+            back_b.innerHTML = 'Back to settings (press "' + localStorage.getItem("back_c") + '")'
+        }
+        if (restart_c=="None") {
+            restart.innerHTML = 'Restart'
+        }
+        else{
+            restart.innerHTML = 'Restart (press "' + localStorage.getItem("restart_c") + '")'
+        }
+        if (pause_c=="None") {
+            pause_on = 'Pause'
+            pause_off = 'Continue'
+        }
+        else{
+            pause_on = 'Pause (press "' + localStorage.getItem("pause_c") + '")'
+            pause_off = 'Continue (press "' + localStorage.getItem("pause_c") + '")'
+        }
+        if (sound_c=="None") {
+            sound_on = 'Turn on the sound'
+            sound_off = 'Turn off the sound'
+        }
+        else{
+            sound_on = 'Turn on the sound (press "' + localStorage.getItem("sound_c") + '")'
+            sound_off = 'Turn off the sound (press "' + localStorage.getItem("sound_c") + '")'
+        }
+
+        pause_b.innerHTML = pause_on
+        sound_b.innerHTML = sound_on
 
         const number_of_players = localStorage.getItem("number_of_players")
         let box_i
         let player_i
         let monster_i
-        if (localStorage.getItem("box_g")=="old") {
-            box_i="images/box2.png"
+        if (localStorage.getItem("box_g") == "old") {
+            box_i = "images/box2.png"
         }
         else {
-            box_i="images/box.png"
+            box_i = "images/box.png"
         }
-        if (localStorage.getItem("player_g")=="old") {
+        if (localStorage.getItem("player_g") == "old") {
             //console.log("bla")
-            player_i="images/player2.png"
+            player_i = "images/player2.png"
         }
         else {
-            player_i="images/player.png"
+            player_i = "images/player.png"
         }
-        if (localStorage.getItem("monster_g")=="old") {
-            monster_i="images/monster2.jpg"
+        if (localStorage.getItem("monster_g") == "old") {
+            monster_i = "images/monster2.jpg"
         }
         else {
-            monster_i="images/monster.png"
+            monster_i = "images/monster.png"
         }
         //console.log(UP)
         //console.log(eqSet(UP,UP2))
         //console.log(eqSet(UP,DOWN))
         let is_acitve = false
-        let keys = new Set([])
+        let keys = []
         let sound = false
         let monster_sound = new Audio('sounds/monster.mp3')
         let player_sound = new Audio('sounds/Player.mp3')
@@ -350,7 +395,7 @@
             //if (sound) { player_sound.play() }
             //console.log("bla")
             let dir = key_to_dir(e.key)
-            if ((player_2_m && player_2_e)||(player_1_m && player_1_e)) {
+            if ((player_2_m && player_2_e) || (player_1_m && player_1_e)) {
                 is_acitve = true
                 //if (sound) { player_sound.play() }
                 e.preventDefault()
@@ -433,95 +478,97 @@
         }
         function key_to_dir(key) {
             //console.log(keys)
-            dir=[0,0]
+            //console.log(LEFT_UP_1)
+            //console.log(is_subset(LEFT_UP_1,keys))
+            dir = [0, 0]
             player_2_m = false
             player_1_m = false
             if (allow_player_diagonls) {
-                if (LEFT_UP_1.isSubsetOf(keys) || LEFT_UP_2.isSubsetOf(keys)) {
+                if (is_subset(LEFT_UP_1,keys) || is_subset(LEFT_UP_2,keys)) {
                     player_1_m = true
-                    dir[0]=[-1, -1]
+                    dir[0] = [-1, -1]
                     //player_2_m = true
                 }
-                if (LEFT_DOWN_1.isSubsetOf(keys) || LEFT_DOWN_2.isSubsetOf(keys)) {
+                if (is_subset(LEFT_DOWN_1,keys) || is_subset(LEFT_DOWN_2,keys)) {
                     player_1_m = true
-                    dir[0]=[1, -1]
+                    dir[0] = [1, -1]
                     //player_2_m = true
                 }
-                if (RIGHT_DOWN_1.isSubsetOf(keys) || RIGHT_DOWN_2.isSubsetOf(keys)) {
+                if (is_subset(RIGHT_DOWN_1,keys) || is_subset(RIGHT_DOWN_2,keys)) {
                     //player_2_m = true
                     player_1_m = true
-                    dir[0]=[1, 1]
+                    dir[0] = [1, 1]
                 }
-                if (RIGHT_UP_1.isSubsetOf(keys) || RIGHT_UP_2.isSubsetOf(keys)) {
+                if (is_subset(RIGHT_UP_1,keys) || is_subset(RIGHT_UP_2,keys)) {
                     //player_2_m = true
                     player_1_m = true
-                    dir[0]=[-1, 1]
+                    dir[0] = [-1, 1]
                 }
-                if (LEFT_UP_p2.isSubsetOf(keys)) {
+                if (is_subset(LEFT_UP_p2,keys) || is_subset(LEFT_UP_p2_1,keys)) {
                     //player_1_m = true
                     player_2_m = true
-                    dir[1]=[-1, -1]
+                    dir[1] = [-1, -1]
                 }
-                if (LEFT_DOWN_p2.isSubsetOf(keys)) {
+                if (is_subset(LEFT_DOWN_p2,keys) || is_subset(LEFT_DOWN_p2_1,keys)) {
                     //player_1_m = true
                     player_2_m = true
-                    dir[1]=[1, -1]
+                    dir[1] = [1, -1]
                 }
-                if (RIGHT_DOWN_p2.isSubsetOf(keys)) {
+                if (is_subset(RIGHT_DOWN_p2,keys) || is_subset(RIGHT_DOWN_p2_1,keys)) {
                     player_2_m = true
-                    dir[1]=[1, 1]
+                    dir[1] = [1, 1]
                     //player_1_m = true
                 }
-                if (RIGHT_UP_p2.isSubsetOf(keys)) {
+                if (is_subset(RIGHT_UP_p2,keys) || is_subset(RIGHT_UP_p2_1,keys)) {
                     player_2_m = true
-                    dir[1]=[-1, 1]
+                    dir[1] = [-1, 1]
                     //player_1_m = true
                 }
             }
-            if ((UP.isSubsetOf(keys))&&(!(player_1_m))) {
+            if ((is_subset(UP,keys)) && (!(player_1_m))) {
                 player_1_m = true
-                dir[0]=[-1, 0]
+                dir[0] = [-1, 0]
                 //player_2_m = true
             }
-            if ((DOWN.isSubsetOf(keys))&&(!(player_1_m))) {
+            if ((is_subset(DOWN,keys)) && (!(player_1_m))) {
                 player_1_m = true
-                dir[0]=[1, 0]
+                dir[0] = [1, 0]
                 //player_2_m = true
             }
-            if ((RIGHT.isSubsetOf(keys))&&(!(player_1_m))) {
+            if ((is_subset(RIGHT,keys)) && (!(player_1_m))) {
                 player_1_m = true
-                dir[0]=[0, 1]
+                dir[0] = [0, 1]
                 //player_2_m = true
             }
-            if ((LEFT.isSubsetOf(keys))&&(!(player_1_m))) {
+            if ((is_subset(LEFT,keys)) && (!(player_1_m))) {
                 player_1_m = true
-                dir[0]=[0, -1]
+                dir[0] = [0, -1]
                 //player_2_m = true
             }
-            if ((UP_p2.isSubsetOf(keys))&&(!(player_2_m))) {
+            if ((is_subset(UP_p2,keys)) && (!(player_2_m))) {
                 //player_1_m = true
-                dir[1]=[-1, 0]
+                dir[1] = [-1, 0]
                 player_2_m = true
             }
-            if ((DOWN_p2.isSubsetOf(keys))&&(!(player_2_m))) {
+            if ((is_subset(DOWN_p2,keys)) && (!(player_2_m))) {
                 //player_1_m = true
-                dir[1]=[1, 0]
+                dir[1] = [1, 0]
                 player_2_m = true
             }
-            if ((RIGHT_p2.isSubsetOf(keys))&&(!(player_2_m))) {
+            if ((is_subset(RIGHT_p2,keys)) && (!(player_2_m))) {
                 //player_1_m = true
-                dir[1]=[0, 1]
+                dir[1] = [0, 1]
                 player_2_m = true
             }
-            if ((LEFT_p2.isSubsetOf(keys))&&(!(player_2_m))) {
+            if ((is_subset(LEFT_p2,keys)) && (!(player_2_m))) {
                 //player_1_m = true
-                dir[1]=[0, -1]
+                dir[1] = [0, -1]
                 player_2_m = true
             }
-            if (key == "p") { pause(key) }
-            if (key == "b") { go_back(key) }
-            if (key == "r") { restart_fun(key) }
-            if (key == "n") { sound_fun(key) }
+            if (key == pause_c) { pause(key) }
+            if (key == back_c) { go_back(key) }
+            if (key == restart_c) { restart_fun(key) }
+            if (key == sound_c) { sound_fun(key) }
             return dir
         }
         function move_player_dir() {
@@ -605,7 +652,7 @@
             clearInterval(timerId)
             clearInterval(timer_time)
             pause_b.removeEventListener("click", pause)
-            pause_b.innerHTML = 'Continue (press "p")'
+            pause_b.innerHTML = pause_off
             pause_lable.innerHTML = "Pause"
             //contin.innerHTML = "Press 'p' to continiue."
             pause_b.addEventListener("click", stop_pause)
@@ -615,7 +662,7 @@
             if (e.type == 'click') {
                 pause_lable.innerHTML = ""
                 contin.innerHTML = ""
-                pause_b.innerHTML = 'Pause (press "p")'
+                pause_b.innerHTML = pause_on
                 document.removeEventListener("keydown", stop_pause)
                 pause_b.addEventListener("click", pause)
                 pause_b.removeEventListener("click", stop_pause)
@@ -624,10 +671,10 @@
                 timer_time = setInterval(timer, 1000)
             }
 
-            if (e.key == "p") {
+            if (e.key == pause_c) {
                 pause_lable.innerHTML = ""
                 contin.innerHTML = ""
-                pause_b.innerHTML = 'Pause (press "p")'
+                pause_b.innerHTML = pause_on
                 document.removeEventListener("keydown", stop_pause)
                 pause_b.addEventListener("click", pause)
                 pause_b.removeEventListener("click", stop_pause)
@@ -635,9 +682,9 @@
                 timerId = setInterval(move_monsters, monster_slownes)
                 timer_time = setInterval(timer, 1000)
             }
-            if (e.key == "b") { go_back(e.key) }
-            if (e.key == "r") { restart_fun(e.key) }
-            if (e.key == "n") { sound_fun(e.key) }
+            if (e.key == back_c) { go_back(e.key) }
+            if (e.key == restart_c) { restart_fun(e.key) }
+            if (e.key == sound_c) { sound_fun(e.key) }
         }
         function go_back(e) {
             if (confirm("Are you sure you want leave this game?")) {
@@ -651,23 +698,41 @@
         }
         function sound_fun(e) {
             sound = !(sound)
-            if (sound_b.innerHTML == 'Turn on the sound (press "n")') {
-                sound_b.innerHTML = 'Turn off the sound (press "n")'
+            if (sound_b.innerHTML == sound_on) {
+                sound_b.innerHTML = sound_off
             }
             else {
-                sound_b.innerHTML = 'Turn on the sound (press "n")'
+                sound_b.innerHTML = sound_on
             }
         }
         function add_key(e) {
-            keys.add(e.key)
+            keys.push(e.key)
         }
         function delete_key(e) {
-            keys.delete(e.key)
+            let new_keys=[]
+            for (let i = 0; i < keys.length; i++) {
+                if (keys[i]!=e.key) {
+                    new_keys.push(keys[i])
+                }
+            }
+            keys=new_keys
         }
         function end_time(e) {
-            if (e.key == "b") { go_back(e.key) }
-            if (e.key == "r") { restart_fun(e.key) }
-            if (e.key == "n") { sound_fun(e.key) }
+            if (e.key == back_c) { go_back(e.key) }
+            if (e.key == restart_c) { restart_fun(e.key) }
+            if (e.key == sound_c) { sound_fun(e.key) }
+        }
+        function is_subset(subset, set) {
+            for (let i = 0; i < subset.length; i++) {
+                let is_true = false
+                for (let j = 0; j < set.length; j++) {
+                    is_true = is_true || (subset[i]==set[j])
+                }
+                if (!(is_true)) {
+                    return false
+                }
+            }
+            return true
         }
 
 
@@ -686,67 +751,67 @@
 
 
 
-  //const resultDisplay = document.querySelector('#result')
-  //let cardsChosen = []
-  //let cardsChosenId = []
-  //let cardsWon = []
+        //const resultDisplay = document.querySelector('#result')
+        //let cardsChosen = []
+        //let cardsChosenId = []
+        //let cardsWon = []
 
-  //create your board
-  //function createBoard() {
-  //  for (let i = 0; i < cardArray.length; i++) {
-  //    const card = document.createElement('img')
-  //    card.setAttribute('src', 'images/monster.png')
-  //    card.setAttribute('width', '50')
-  //    //card.setAttribute('height', '50')
-  //
-  //    card.setAttribute('data-id', i)
-  //    //card.addEventListener('click', flipCard)
-  //    grid.appendChild(card)
-  //  }
-  //}
-  //createBoard()
+        //create your board
+        //function createBoard() {
+        //  for (let i = 0; i < cardArray.length; i++) {
+        //    const card = document.createElement('img')
+        //    card.setAttribute('src', 'images/monster.png')
+        //    card.setAttribute('width', '50')
+        //    //card.setAttribute('height', '50')
+        //
+        //    card.setAttribute('data-id', i)
+        //    //card.addEventListener('click', flipCard)
+        //    grid.appendChild(card)
+        //  }
+        //}
+        //createBoard()
 
-  //check for matches
-  //function checkForMatch() {
-  //  const cards = document.querySelectorAll('img')
-  //  const optionOneId = cardsChosenId[0]
-  //  const optionTwoId = cardsChosenId[1]
-  //
-  //  if(optionOneId == optionTwoId) {
-  //    cards[optionOneId].setAttribute('src', 'images/blank.png')
-  //    cards[optionTwoId].setAttribute('src', 'images/blank.png')
-  //    alert('You have clicked the same image!')
-  //  }
-  //  else if (cardsChosen[0] === cardsChosen[1]) {
-  //    alert('You found a match')
-  //    cards[optionOneId].setAttribute('src', 'images/white.png')
-  //    cards[optionTwoId].setAttribute('src', 'images/white.png')
-  //    cards[optionOneId].removeEventListener('click', flipCard)
-  //    cards[optionTwoId].removeEventListener('click', flipCard)
-  //    cardsWon.push(cardsChosen)
-  //  } else {
-  //    cards[optionOneId].setAttribute('src', 'images/blank.png')
-  //    cards[optionTwoId].setAttribute('src', 'images/blank.png')
-  //    alert('Sorry, try again')
-  //  }
-  //  cardsChosen = []
-  //  cardsChosenId = []
-  //  resultDisplay.textContent = cardsWon.length
-  //  if  (cardsWon.length === cardArray.length/2) {
-  //    resultDisplay.textContent = 'Congratulations! You found them all!'
-  //  }
-  //}
+        //check for matches
+        //function checkForMatch() {
+        //  const cards = document.querySelectorAll('img')
+        //  const optionOneId = cardsChosenId[0]
+        //  const optionTwoId = cardsChosenId[1]
+        //
+        //  if(optionOneId == optionTwoId) {
+        //    cards[optionOneId].setAttribute('src', 'images/blank.png')
+        //    cards[optionTwoId].setAttribute('src', 'images/blank.png')
+        //    alert('You have clicked the same image!')
+        //  }
+        //  else if (cardsChosen[0] === cardsChosen[1]) {
+        //    alert('You found a match')
+        //    cards[optionOneId].setAttribute('src', 'images/white.png')
+        //    cards[optionTwoId].setAttribute('src', 'images/white.png')
+        //    cards[optionOneId].removeEventListener('click', flipCard)
+        //    cards[optionTwoId].removeEventListener('click', flipCard)
+        //    cardsWon.push(cardsChosen)
+        //  } else {
+        //    cards[optionOneId].setAttribute('src', 'images/blank.png')
+        //    cards[optionTwoId].setAttribute('src', 'images/blank.png')
+        //    alert('Sorry, try again')
+        //  }
+        //  cardsChosen = []
+        //  cardsChosenId = []
+        //  resultDisplay.textContent = cardsWon.length
+        //  if  (cardsWon.length === cardArray.length/2) {
+        //    resultDisplay.textContent = 'Congratulations! You found them all!'
+        //  }
+        //}
 
-  //flip your card
-  //function flipCard() {
-  //  let cardId = this.getAttribute('data-id')
-  //  cardsChosen.push(cardArray[cardId].name)
-  //  cardsChosenId.push(cardId)
-  //  this.setAttribute('src', cardArray[cardId].img)
-  //  if (cardsChosen.length ===2) {
-  //    setTimeout(checkForMatch, 500)
-  //  }
-  //}
+        //flip your card
+        //function flipCard() {
+        //  let cardId = this.getAttribute('data-id')
+        //  cardsChosen.push(cardArray[cardId].name)
+        //  cardsChosenId.push(cardId)
+        //  this.setAttribute('src', cardArray[cardId].img)
+        //  if (cardsChosen.length ===2) {
+        //    setTimeout(checkForMatch, 500)
+        //  }
+        //}
 
 
     </script>

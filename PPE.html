@@ -13,6 +13,12 @@
             /*padding: 10px;*/
         }
 
+        .big_column {
+            float: left;
+            width: 33%;
+            /*padding: 10px;*/
+        }
+
         /* Clear floats after the columns */
         .row:after {
             content: "";
@@ -42,6 +48,18 @@
             text-decoration: none;
             display: inline-block;
             font-size: 20px;
+            margin: 0px 0px;
+            cursor: pointer;
+        }
+        .button_tiny {
+            background-color: purple;
+            border: none;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 15px;
             margin: 0px 0px;
             cursor: pointer;
         }
@@ -188,6 +206,117 @@
                 </p>
             </div>
         </div>
+        <h3>Controls</h3>
+        <text>To change a control click on the name of the key associated with the control, and then press a key. The key will change to
+            the key you pressed.</text>
+        <div class="row">
+            <div class="big_column">
+                <h4>Player 1</h4>
+                <p>
+                    <button class="button_tiny" id="set_none_p1">Set None</button>
+                </p>
+                <p>
+                    <label id="aa">Up:</label>
+                    <button id="p1_up_c" class="control_input">ArrowUp</button>
+                </p>
+                <p>
+                    <label id="ab">Right:</label>
+                    <button id="p1_right_c" class="control_input">ArrowRight</button>
+                </p>
+                <p>
+                    <label id="ac">Left:</label>
+                    <button id="p1_left_c" class="control_input">ArrowLeft</button>
+                </p>
+                <p>
+                    <label id="ad">Down:</label>
+                    <button id="p1_down_c" class="control_input">ArrowDown</button>
+                </p>
+                <b>Single key diagonals</b>
+                <p>
+                    <button class="button_tiny" id="set_none_p1_d">Set None</button>
+                </p>
+                <p>
+                    <label id="ba">Up, Left:</label>
+                    <button id="p1_up_left_c" class="control_input">Home</button>
+                </p>
+                <p>
+                    <label id="bb">Up, Right:</label>
+                    <button id="p1_up_right_c" class="control_input">PageUp</button>
+                </p>
+                <p>
+                    <label id="bc">Down, Left:</label>
+                    <button id="p1_down_left_c" class="control_input">End</button>
+                </p>
+                <p>
+                    <label id="bd">Down, Right:</label>
+                    <button id="p1_down_right_c" class="control_input">PageDown</button>
+                </p>
+            </div>
+            <div class="big_column">
+                <h4>Player 2</h4>
+                <p>
+                    <button class="button_tiny" id="set_none_p2">Set None</button>
+                </p>
+                <p>
+                    <label id="ca">Up:</label>
+                    <button id="p2_up_c" class="control_input">w</button>
+                </p>
+                <p>
+                    <label id="cb">Right:</label>
+                    <button id="p2_right_c" class="control_input">d</button>
+                </p>
+                <p>
+                    <label id="cc">Left:</label>
+                    <button id="p2_left_c" class="control_input">a</button>
+                </p>
+                <p>
+                    <label id="cd">Down:</label>
+                    <button id="p2_down_c" class="control_input">s</button>
+                </p>
+                <b>Single key diagonals</b>
+                <p>
+                    <button class="button_tiny" id="set_none_p2_d">Set None</button>
+                </p>
+                <p>
+                    <label id="da">Up, Left:</label>
+                    <button id="p2_up_left_c" class="control_input">None</button>
+                </p>
+                <p>
+                    <label id="db">Up, Right:</label>
+                    <button id="p2_up_right_c" class="control_input">None</button>
+                </p>
+                <p>
+                    <label id="dc">Down, Left:</label>
+                    <button id="p2_down_left_c" class="control_input">None</button>
+                </p>
+                <p>
+                    <label id="dd">Down, Right:</label>
+                    <button id="p2_down_right_c" class="control_input">None</button>
+                </p>
+            </div>
+            <div class="big_column">
+                <h4>General</h4>
+                <p>
+                    <button class="button_small" id="set_none_g">Set None</button>
+                </p>
+                <p>
+                    <label id="ea">Back to settings:</label>
+                    <button id="back_c" class="control_input">b</button>
+                </p>
+                <p>
+                    <label id="eb">Restart:</label>
+                    <button id="restart_c" class="control_input">r</button>
+                </p>
+                <p>
+                    <label id="ec">Pause and Continue:</label>
+                    <button id="pause_c" class="control_input">p</button>
+                </p>
+                <p>
+                    <label id="ed">Sound (on\off):</label>
+                    <button id="sound_c" class="control_input">n</button>
+                </p>
+            </div>
+        </div>
         <div id="buttons">
             <button class="button" type="submit">Play</button>
             <button class="button" id="set_default">Set Default</button>
@@ -195,6 +324,8 @@
     </form>
 
     <script>
+        //document.addEventListener("keydown", preventDefault_fun)
+
         const form = document.getElementById('form')
         const set_default = document.getElementById('set_default')
         const set_classical = document.getElementById('set_classical')
@@ -207,32 +338,63 @@
         const player_g = document.getElementById('player_g')
         const monster_g = document.getElementById('monster_g')
         const box_g = document.getElementById('box_g')
+
+        let active_control
+        //console.log(localStorage.getItem("sound_c"))
+        if (localStorage.getItem("sound_c") != undefined) {
+            document.getElementById("n_of_monsters").value = localStorage.getItem("n_of_monsters")
+            document.getElementById("monster_speed").value = localStorage.getItem("monster_speed")
+            document.getElementById("n_of_rows").value = localStorage.getItem("n_of_rows")
+            document.getElementById("n_of_columns").value = localStorage.getItem("n_of_columns")
+            document.getElementById("squere_size").value = localStorage.getItem("squre_size")
+            document.getElementById("present_of_boxes").value = localStorage.getItem("present_of_boxes")
+            document.getElementById("prob_mult_p").value = localStorage.getItem("prob_mult_p")
+            document.getElementById("prob_mult_b").value = localStorage.getItem("prob_mult_b")
+            document.getElementById("allow_player_diagonls").value = localStorage.getItem("allow_player_diagonls")
+            document.getElementById("allow_monster_diagonls").value = localStorage.getItem("allow_monster_diagonls")
+            document.getElementById("player_slownes").value = localStorage.getItem("player_slownes")
+            document.getElementById("number_of_players").value = localStorage.getItem("number_of_players")
+            document.getElementById("player_g").value = localStorage.getItem("player_g")
+            document.getElementById("monster_g").value = localStorage.getItem("monster_g")
+            document.getElementById("box_g").value = localStorage.getItem("box_g")
+
+            document.getElementById("p1_up_c").innerHTML = localStorage.getItem("p1_up_c")
+            document.getElementById("p1_down_c").innerHTML = localStorage.getItem("p1_down_c")
+            document.getElementById("p1_left_c").innerHTML = localStorage.getItem("p1_left_c")
+            document.getElementById("p1_right_c").innerHTML = localStorage.getItem("p1_right_c")
+
+            document.getElementById("p1_up_left_c").innerHTML = localStorage.getItem("p1_up_left_c")
+            document.getElementById("p1_down_right_c").innerHTML = localStorage.getItem("p1_down_right_c")
+            document.getElementById("p1_down_left_c").innerHTML = localStorage.getItem("p1_down_left_c")
+            document.getElementById("p1_up_right_c").innerHTML = localStorage.getItem("p1_up_right_c")
+
+            document.getElementById("p2_up_c").innerHTML = localStorage.getItem("p2_up_c")
+            document.getElementById("p2_down_c").innerHTML = localStorage.getItem("p2_down_c")
+            document.getElementById("p2_left_c").innerHTML = localStorage.getItem("p2_left_c")
+            document.getElementById("p2_right_c").innerHTML = localStorage.getItem("p2_right_c")
+
+            document.getElementById("p2_up_left_c").innerHTML = localStorage.getItem("p2_up_left_c")
+            document.getElementById("p2_down_right_c").innerHTML = localStorage.getItem("p2_down_right_c")
+            document.getElementById("p2_down_left_c").innerHTML = localStorage.getItem("p2_down_left_c")
+            document.getElementById("p2_up_right_c").innerHTML = localStorage.getItem("p2_up_right_c")
+
+            document.getElementById("back_c").innerHTML = localStorage.getItem("back_c")
+            document.getElementById("restart_c").innerHTML = localStorage.getItem("restart_c")
+            document.getElementById("pause_c").innerHTML = localStorage.getItem("pause_c")
+            document.getElementById("sound_c").innerHTML = localStorage.getItem("sound_c")
+        }
+        //document.getElementById('p1_up_c').innerHTML = localStorage.getItem
+
+
         change_monster_img(1)
         change_box_img(1)
         change_player_img(1)
-        //console.log(monster_g.value)
+        //console.log(localStorage.getItem("sound_c"))
         form.addEventListener("submit", function (e) {
             //console.log(monster_g.value)
             e.preventDefault();
             //console.log("bla");
-            localStorage.setItem('n_of_monsters', document.getElementById("n_of_monsters").value)
-            localStorage.setItem('monster_speed', document.getElementById("monster_speed").value)
-            localStorage.setItem('n_of_rows', document.getElementById("n_of_rows").value)
-            localStorage.setItem('n_of_columns', document.getElementById("n_of_columns").value)
-            localStorage.setItem('squre_size', document.getElementById("squere_size").value)
-            localStorage.setItem('present_of_boxes', document.getElementById("present_of_boxes").value)
-            localStorage.setItem('prob_mult_p', document.getElementById("prob_mult_p").value)
-            localStorage.setItem('prob_mult_b', document.getElementById("prob_mult_b").value)
-            //console.log(document.getElementById("allow_player_diagonls").value);
-            localStorage.setItem('allow_player_diagonls', document.getElementById("allow_player_diagonls").value)
-            localStorage.setItem('allow_monster_diagonls', document.getElementById("allow_monster_diagonls").value)
-            localStorage.setItem('player_slownes', document.getElementById("player_slownes").value)
-            localStorage.setItem('number_of_players', document.getElementById("number_of_players").value)
-            localStorage.setItem('player_g', document.getElementById("player_g").value)
-            //console.log(monster_g.value)
-            localStorage.setItem('monster_g', document.getElementById("monster_g").value)
-            localStorage.setItem('box_g', document.getElementById("box_g").value)
-
+            record_data()
             //console.log("bla");
             //alert("bla")
             window.location.href = "game.html";
@@ -245,6 +407,14 @@
         monster_g.addEventListener("change", change_monster_img)
         box_g.addEventListener("change", change_box_img)
         player_g.addEventListener("change", change_player_img)
+
+        form.addEventListener("click", active_change_c)
+
+        document.getElementById("set_none_p1").addEventListener("click", set_none_p1)
+        document.getElementById("set_none_p1_d").addEventListener("click", set_none_p1_d)
+        document.getElementById("set_none_p2").addEventListener("click", set_none_p2)
+        document.getElementById("set_none_p2_d").addEventListener("click", set_none_p2_d)
+        document.getElementById("set_none_g").addEventListener("click", set_none_g)
         function load() {
             //console.log("monster_g.value")
             change_monster_img(1)
@@ -269,6 +439,37 @@
             document.getElementById("monster_g").value = "new"
             document.getElementById("player_g").value = "new"
             document.getElementById("box_g").value = "new"
+            
+            document.getElementById("p1_up_c").innerHTML = "ArrowUp"
+            document.getElementById("p1_down_c").innerHTML = "ArrowDown"
+            document.getElementById("p1_left_c").innerHTML = "ArrowLeft"
+            document.getElementById("p1_right_c").innerHTML = "ArrowRight"
+
+            document.getElementById("p1_up_left_c").innerHTML = "Home"
+            document.getElementById("p1_down_right_c").innerHTML = "PageDown"
+            document.getElementById("p1_down_left_c").innerHTML = "End"
+            document.getElementById("p1_up_right_c").innerHTML = "PageUp"
+
+            document.getElementById("p2_up_c").innerHTML = "w"
+            document.getElementById("p2_down_c").innerHTML = "s"
+            document.getElementById("p2_left_c").innerHTML = "a"
+            document.getElementById("p2_right_c").innerHTML = "d"
+
+            document.getElementById("p2_up_left_c").innerHTML = "None"
+            document.getElementById("p2_down_right_c").innerHTML = "None"
+            document.getElementById("p2_down_left_c").innerHTML = "None"
+            document.getElementById("p2_up_right_c").innerHTML = "None"
+
+            document.getElementById("back_c").innerHTML = "b"
+            document.getElementById("restart_c").innerHTML = "r"
+            document.getElementById("pause_c").innerHTML = "p"
+            document.getElementById("sound_c").innerHTML = "n"
+
+
+            record_data()
+            change_monster_img(e)
+            change_box_img(e)
+            change_player_img(e)
         }//
         function set_classical_fun(e) {
             e.preventDefault();
@@ -314,6 +515,113 @@
             else {
                 player_i.src = "images/player.png"
             }
+        }
+        function active_change_c(e) {
+            //console.log(active_control.className)
+            if (e.srcElement.className == "control_input") {
+                e.preventDefault()
+                if (active_control!=undefined){
+                    active_control.style.background="white";
+                    active_control.style.color="black";
+                }
+                active_control = e.srcElement
+                active_control.style.background="purple";
+                active_control.style.color="white";
+                e.preventDefault()
+                //active_control.removeEventListener("click", active_change_c)
+                document.addEventListener("keydown", change_c)
+            }
+        }
+        function change_c(e) {
+            e.preventDefault()
+            document.removeEventListener("keydown", change_c)
+            //active_control.addEventListener("click", active_change_c)
+            active_control.style.background="white";
+            active_control.style.color="black";
+            active_control.innerHTML = e.key
+        }
+        function preventDefault_fun(e) {
+            e.preventDefault()
+        }
+        function set_none_g(e) {
+            e.preventDefault()
+            document.getElementById("back_c").innerHTML = "None"
+            document.getElementById("restart_c").innerHTML = "None"
+            document.getElementById("pause_c").innerHTML = "None"
+            document.getElementById("sound_c").innerHTML = "None"
+        }
+        function set_none_p1(e) {
+            e.preventDefault()
+            document.getElementById("p1_up_c").innerHTML = "None"
+            document.getElementById("p1_down_c").innerHTML = "None"
+            document.getElementById("p1_left_c").innerHTML = "None"
+            document.getElementById("p1_right_c").innerHTML = "None"
+        }
+        function set_none_p1_d(e) {
+            e.preventDefault()
+            document.getElementById("p1_up_left_c").innerHTML = "None"
+            document.getElementById("p1_down_right_c").innerHTML = "None"
+            document.getElementById("p1_down_left_c").innerHTML = "None"
+            document.getElementById("p1_up_right_c").innerHTML = "None"
+        }
+        function set_none_p2(e) {
+            e.preventDefault()
+            document.getElementById("p2_up_c").innerHTML = "None"
+            document.getElementById("p2_down_c").innerHTML = "None"
+            document.getElementById("p2_left_c").innerHTML = "None"
+            document.getElementById("p2_right_c").innerHTML = "None"
+        }
+        function set_none_p2_d(e) {
+            e.preventDefault()
+            document.getElementById("p2_up_left_c").innerHTML = "None"
+            document.getElementById("p2_down_right_c").innerHTML = "None"
+            document.getElementById("p2_down_left_c").innerHTML = "None"
+            document.getElementById("p2_up_right_c").innerHTML = "None"
+        }
+        function record_data() {
+            localStorage.setItem('n_of_monsters', document.getElementById("n_of_monsters").value)
+            localStorage.setItem('monster_speed', document.getElementById("monster_speed").value)
+            localStorage.setItem('n_of_rows', document.getElementById("n_of_rows").value)
+            localStorage.setItem('n_of_columns', document.getElementById("n_of_columns").value)
+            localStorage.setItem('squre_size', document.getElementById("squere_size").value)
+            localStorage.setItem('present_of_boxes', document.getElementById("present_of_boxes").value)
+            localStorage.setItem('prob_mult_p', document.getElementById("prob_mult_p").value)
+            localStorage.setItem('prob_mult_b', document.getElementById("prob_mult_b").value)
+            //console.log(document.getElementById("allow_player_diagonls").value);
+            localStorage.setItem('allow_player_diagonls', document.getElementById("allow_player_diagonls").value)
+            localStorage.setItem('allow_monster_diagonls', document.getElementById("allow_monster_diagonls").value)
+            localStorage.setItem('player_slownes', document.getElementById("player_slownes").value)
+            localStorage.setItem('number_of_players', document.getElementById("number_of_players").value)
+            localStorage.setItem('player_g', document.getElementById("player_g").value)
+            //console.log(monster_g.value)
+            localStorage.setItem('monster_g', document.getElementById("monster_g").value)
+            localStorage.setItem('box_g', document.getElementById("box_g").value)
+
+
+            localStorage.setItem('p1_up_c', document.getElementById("p1_up_c").innerHTML)
+            localStorage.setItem('p1_down_c', document.getElementById("p1_down_c").innerHTML)
+            localStorage.setItem('p1_left_c', document.getElementById("p1_left_c").innerHTML)
+            localStorage.setItem('p1_right_c', document.getElementById("p1_right_c").innerHTML)
+
+            localStorage.setItem('p1_up_left_c', document.getElementById("p1_up_left_c").innerHTML)
+            localStorage.setItem('p1_up_right_c', document.getElementById("p1_up_right_c").innerHTML)
+            localStorage.setItem('p1_down_left_c', document.getElementById("p1_down_left_c").innerHTML)
+            localStorage.setItem('p1_down_right_c', document.getElementById("p1_down_right_c").innerHTML)
+
+            localStorage.setItem('p2_up_c', document.getElementById("p2_up_c").innerHTML)
+            localStorage.setItem('p2_down_c', document.getElementById("p2_down_c").innerHTML)
+            localStorage.setItem('p2_left_c', document.getElementById("p2_left_c").innerHTML)
+            localStorage.setItem('p2_right_c', document.getElementById("p2_right_c").innerHTML)
+
+            localStorage.setItem('p2_up_left_c', document.getElementById("p2_up_left_c").innerHTML)
+            localStorage.setItem('p2_up_right_c', document.getElementById("p2_up_right_c").innerHTML)
+            localStorage.setItem('p2_down_left_c', document.getElementById("p2_down_left_c").innerHTML)
+            localStorage.setItem('p2_down_right_c', document.getElementById("p2_down_right_c").innerHTML)
+
+            localStorage.setItem('back_c', document.getElementById("back_c").innerHTML)
+            localStorage.setItem('restart_c', document.getElementById("restart_c").innerHTML)
+            localStorage.setItem('pause_c', document.getElementById("pause_c").innerHTML)
+            localStorage.setItem('sound_c', document.getElementById("sound_c").innerHTML)
         }
     </script>
 

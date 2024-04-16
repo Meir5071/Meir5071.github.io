@@ -27,7 +27,7 @@
         }
 
         .button {
-            background-color: purple;
+            background-color: green;
             border: none;
             color: white;
             padding: 10px 10px;
@@ -87,6 +87,10 @@
     <h2>A remake of the 1980's Acorn game "Purple People Eaters" - a beta version</h2>
     <h2>Choose your settings and click "play". </h2>
     <form id="form">
+        <div id="buttons">
+            <button class="button" type="submit">Play</button>
+            <button class="button" id="set_default">Set Default</button>
+        </div>
         <div class="row">
             <div class="column">
                 <p>
@@ -316,10 +320,6 @@
                     <button id="sound_c" class="control_input">n</button>
                 </p>
             </div>
-        </div>
-        <div id="buttons">
-            <button class="button" type="submit">Play</button>
-            <button class="button" id="set_default">Set Default</button>
         </div>
     </form>
 

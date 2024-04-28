@@ -34,17 +34,60 @@
             background-color: purple;
             border: none;
             color: white;
+            /*height: 75px;*/
+            width: 90%;
             padding: 5px 5px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 20px;
+            font-size: 19px;
             margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .button_c {
+            background-color: green;
+            border: none;
+            color: white;
+            height: 33%;
+            width: 33%;
+            padding: 0px 0px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 35px;
+            margin: 0px 0px;
+            cursor: pointer;
+        }
+
+        .button_ca {
+            background-color: green;
+            border: none;
+            color: white;
+            height: 33.33%;
+            width: 33.33%;
+            padding: 0px 0px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 0px 0px;
             cursor: pointer;
         }
 
         #bod {
             background-color: rgb(126, 211, 250);
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            width: 90%;
+        }
+
+        .column2 {
+            float: left;
+            width: 33%;
         }
     </style>
 </head>
@@ -52,7 +95,8 @@
 <body id="bod">
     <h1>Purple People Eaters
     </h1>
-    <h3>Use two keys at the same time for diagonals. Do not let the monsters get to you! Lock the monsters using the boxes.</h3>
+    <h3>Use two keys at the same time for diagonals. Do not let the monsters get to you! Lock the monsters using the
+        boxes.</h3>
     <div class="row">
         <div class="column" id="control">
             <p>
@@ -69,6 +113,19 @@
             </p>
             <p>
             <h2 id="timer">Time: 00:00</h2>
+            </p>
+            <p>
+            <div class="buttons">
+                <button class="button_c" id="button_c1">&#8598</button>
+                <button class="button_c" id="button_c2">&#8593</button>
+                <button class="button_c" id="button_c3">&#8599</button>
+                <button class="button_c" id="button_c4">&#8592</button>
+                <button class="button_ca"></button>
+                <button class="button_c" id="button_c5">&#8594</button>
+                <button class="button_c" id="button_c6">&#8601</button>
+                <button class="button_c" id="button_c7">&#8595</button>
+                <button class="button_c" id="button_c8">&#8600</button>
+            </div>
             </p>
             <p>
             <h1 class="win_lose"></h1>
@@ -94,17 +151,29 @@
         const win_lose = document.querySelector('.win_lose')
         const pause_lable = document.querySelector('.pause')
         const contin = document.querySelector('.contin')
+        const buttons = document.querySelector('.buttons')
+        //console.log(buttons.clientWidth) //bug!!
+        //console.log(buttons.clientHeight)
+        buttons.setAttribute("style","height:"+buttons.clientWidth+"px");
+        buttons.style.height = buttons.clientWidth+"px";
+        //console.log("width:"+buttons.clientWidth+"px")
+        //console.log(buttons.clientHeight)
         const time = document.getElementById("timer")
         const back_b = document.getElementById('back')
         const restart = document.getElementById('restart')
         const pause_b = document.getElementById('pause')
         const sound_b = document.getElementById('sound')
+        const button_controls = document.querySelectorAll('.button_c')
+        const buttons_dirs=[localStorage.getItem("p1_up_left_c"),localStorage.getItem("p1_up_c"),localStorage.getItem("p1_up_right_c"),localStorage.getItem("p1_left_c"),localStorage.getItem("p1_right_c"),localStorage.getItem("p1_down_left_c"),localStorage.getItem("p1_down_c"),localStorage.getItem("p1_down_right_c")]
+        //console.log(button_controls)
+        button_controls.forEach(button_control => button_control.addEventListener("mousedown",add_key_with_button))
+        button_controls.forEach(button_control => button_control.addEventListener("mouseup",delete_key_with_button))
         back_b.addEventListener("click", go_back)
         pause_b.addEventListener("click", pause)
         sound_b.addEventListener("click", sound_fun)
         restart.addEventListener("click", restart_fun)
         const squre_size = Number(localStorage.getItem("squre_size"))
-        //console.log(localStorage.getItem("squre_size"))
+        //console.log(localStorage.getItem("squre_size"))p
         const n_of_rows = Number(localStorage.getItem("n_of_rows"))
         const n_of_columns = Number(localStorage.getItem("n_of_columns"))
         const monster_slownes = 1000 / Number(localStorage.getItem("monster_speed"))
@@ -113,10 +182,11 @@
         const prob_mult_p = Number(localStorage.getItem("prob_mult_p"))
         const prob_mult_b = Number(localStorage.getItem("prob_mult_b"))
         const player_slownes = Number(localStorage.getItem("player_slownes"))
+        const player_button_slownes = player_slownes + 33
         const eqSet = (xs, ys) => xs.size === ys.size && [...xs].every((x) => ys.has(x));
 
         const UP = [localStorage.getItem("p1_up_c")]
-        const DOWN =  [localStorage.getItem("p1_down_c")]
+        const DOWN = [localStorage.getItem("p1_down_c")]
         const RIGHT = [localStorage.getItem("p1_right_c")]
         const LEFT = [localStorage.getItem("p1_left_c")]
 
@@ -146,6 +216,7 @@
         const RIGHT_DOWN_p2 = [localStorage.getItem("p2_down_c"), localStorage.getItem("p2_right_c")]
 
         let back_c = localStorage.getItem("back_c")
+        //let a=0
         let restart_c = localStorage.getItem("restart_c")
         let pause_c = localStorage.getItem("pause_c")
         let sound_c = localStorage.getItem("sound_c")
@@ -154,37 +225,38 @@
         let sound_off
         let pause_on
         let pause_off
-        if (back_c=="None") {
+        if (back_c == "None") {
             back_b.innerHTML = 'Back to settings'
         }
-        else{
-            back_b.innerHTML = 'Back to settings (press "' + localStorage.getItem("back_c") + '")'
+        else {
+            back_b.innerHTML = 'Back to settings\<br \\\>(press "' + localStorage.getItem("back_c") + '")'
         }
-        if (restart_c=="None") {
+        if (restart_c == "None") {
             restart.innerHTML = 'Restart'
         }
-        else{
-            restart.innerHTML = 'Restart (press "' + localStorage.getItem("restart_c") + '")'
+        else {
+            restart.innerHTML = 'Restart\<br \\\>(press "' + localStorage.getItem("restart_c") + '")'
         }
-        if (pause_c=="None") {
+        if (pause_c == "None") {
             pause_on = 'Pause'
             pause_off = 'Continue'
         }
-        else{
-            pause_on = 'Pause (press "' + localStorage.getItem("pause_c") + '")'
-            pause_off = 'Continue (press "' + localStorage.getItem("pause_c") + '")'
+        else {
+            pause_on = 'Pause\<br \\\>(press "' + localStorage.getItem("pause_c") + '")'
+            pause_off = 'Continue\<br \\\>(press "' + localStorage.getItem("pause_c") + '")'
         }
-        if (sound_c=="None") {
+        if (sound_c == "None") {
             sound_on = 'Turn on the sound'
             sound_off = 'Turn off the sound'
         }
-        else{
-            sound_on = 'Turn on the sound (press "' + localStorage.getItem("sound_c") + '")'
-            sound_off = 'Turn off the sound (press "' + localStorage.getItem("sound_c") + '")'
+        else {
+            sound_on = 'Turn on the sound\<br \\=""\>(press "' + localStorage.getItem("sound_c") + '")'
+            sound_off = 'Turn off the sound\<br \\\>(press "' + localStorage.getItem("sound_c") + '")'
         }
 
         pause_b.innerHTML = pause_on
         sound_b.innerHTML = sound_on
+        //console.log(sound_on)
 
         const number_of_players = localStorage.getItem("number_of_players")
         let box_i
@@ -264,8 +336,9 @@
         //move_monsters()
         //test_cumsum()
         //test_weighted_random_choice()
-        document.addEventListener('keydown', add_key)
-        document.addEventListener('keyup', delete_key)
+        hide_arrow_buttons()
+        document.addEventListener('keydown',(e) => {add_key(e.key)})
+        document.addEventListener('keyup', (e) => {delete_key(e.key)})
         document.addEventListener('keydown', players_move)
         //grid.addEventListener('keydown',players_move)
         timerId = setInterval(move_monsters, monster_slownes)
@@ -273,9 +346,12 @@
         //a = setInterval(tmp, 10000)
         //function play_monster(){monster_sound.play()}
 
+
+
         function timer() {
             if (is_acitve) {
                 time_sec_1++
+                //a++
                 if (time_sec_1 == 10) {
                     time_sec_1 = 0
                     time_sec_10++
@@ -293,6 +369,14 @@
                 }
             }
             time.innerHTML = "Time: ".concat((time_min_10.toString()), (time_min_1.toString()), ":", (time_sec_10.toString()), (time_sec_1.toString()))
+        }
+        function hide_arrow_buttons() {
+            if (!(allow_player_diagonls)) {
+                document.getElementById('button_c1').style.visibility="hidden";
+                document.getElementById('button_c3').style.visibility="hidden";
+                document.getElementById('button_c6').style.visibility="hidden";
+                document.getElementById('button_c8').style.visibility="hidden";
+            }
         }
         function init_dirs() {
             if (!(allow_monster_diagonls)) {
@@ -484,83 +568,83 @@
             player_2_m = false
             player_1_m = false
             if (allow_player_diagonls) {
-                if (is_subset(LEFT_UP_1,keys) || is_subset(LEFT_UP_2,keys)) {
+                if (is_subset(LEFT_UP_1, keys) || is_subset(LEFT_UP_2, keys)) {
                     player_1_m = true
                     dir[0] = [-1, -1]
                     //player_2_m = true
                 }
-                if (is_subset(LEFT_DOWN_1,keys) || is_subset(LEFT_DOWN_2,keys)) {
+                if (is_subset(LEFT_DOWN_1, keys) || is_subset(LEFT_DOWN_2, keys)) {
                     player_1_m = true
                     dir[0] = [1, -1]
                     //player_2_m = true
                 }
-                if (is_subset(RIGHT_DOWN_1,keys) || is_subset(RIGHT_DOWN_2,keys)) {
+                if (is_subset(RIGHT_DOWN_1, keys) || is_subset(RIGHT_DOWN_2, keys)) {
                     //player_2_m = true
                     player_1_m = true
                     dir[0] = [1, 1]
                 }
-                if (is_subset(RIGHT_UP_1,keys) || is_subset(RIGHT_UP_2,keys)) {
+                if (is_subset(RIGHT_UP_1, keys) || is_subset(RIGHT_UP_2, keys)) {
                     //player_2_m = true
                     player_1_m = true
                     dir[0] = [-1, 1]
                 }
-                if (is_subset(LEFT_UP_p2,keys) || is_subset(LEFT_UP_p2_1,keys)) {
+                if (is_subset(LEFT_UP_p2, keys) || is_subset(LEFT_UP_p2_1, keys)) {
                     //player_1_m = true
                     player_2_m = true
                     dir[1] = [-1, -1]
                 }
-                if (is_subset(LEFT_DOWN_p2,keys) || is_subset(LEFT_DOWN_p2_1,keys)) {
+                if (is_subset(LEFT_DOWN_p2, keys) || is_subset(LEFT_DOWN_p2_1, keys)) {
                     //player_1_m = true
                     player_2_m = true
                     dir[1] = [1, -1]
                 }
-                if (is_subset(RIGHT_DOWN_p2,keys) || is_subset(RIGHT_DOWN_p2_1,keys)) {
+                if (is_subset(RIGHT_DOWN_p2, keys) || is_subset(RIGHT_DOWN_p2_1, keys)) {
                     player_2_m = true
                     dir[1] = [1, 1]
                     //player_1_m = true
                 }
-                if (is_subset(RIGHT_UP_p2,keys) || is_subset(RIGHT_UP_p2_1,keys)) {
+                if (is_subset(RIGHT_UP_p2, keys) || is_subset(RIGHT_UP_p2_1, keys)) {
                     player_2_m = true
                     dir[1] = [-1, 1]
                     //player_1_m = true
                 }
             }
-            if ((is_subset(UP,keys)) && (!(player_1_m))) {
+            if ((is_subset(UP, keys)) && (!(player_1_m))) {
                 player_1_m = true
                 dir[0] = [-1, 0]
                 //player_2_m = true
             }
-            if ((is_subset(DOWN,keys)) && (!(player_1_m))) {
+            if ((is_subset(DOWN, keys)) && (!(player_1_m))) {
                 player_1_m = true
                 dir[0] = [1, 0]
                 //player_2_m = true
             }
-            if ((is_subset(RIGHT,keys)) && (!(player_1_m))) {
+            if ((is_subset(RIGHT, keys)) && (!(player_1_m))) {
                 player_1_m = true
                 dir[0] = [0, 1]
                 //player_2_m = true
             }
-            if ((is_subset(LEFT,keys)) && (!(player_1_m))) {
+            if ((is_subset(LEFT, keys)) && (!(player_1_m))) {
                 player_1_m = true
                 dir[0] = [0, -1]
                 //player_2_m = true
             }
-            if ((is_subset(UP_p2,keys)) && (!(player_2_m))) {
+            if ((is_subset(UP_p2, keys)) && (!(player_2_m))) {
                 //player_1_m = true
                 dir[1] = [-1, 0]
                 player_2_m = true
             }
-            if ((is_subset(DOWN_p2,keys)) && (!(player_2_m))) {
+            if ((is_subset(DOWN_p2, keys)) && (!(player_2_m))) {
                 //player_1_m = true
                 dir[1] = [1, 0]
                 player_2_m = true
             }
-            if ((is_subset(RIGHT_p2,keys)) && (!(player_2_m))) {
+            if ((is_subset(RIGHT_p2, keys)) && (!(player_2_m))) {
                 //player_1_m = true
                 dir[1] = [0, 1]
                 player_2_m = true
             }
-            if ((is_subset(LEFT_p2,keys)) && (!(player_2_m))) {
+            if ((is_subset(LEFT_p2, keys)) && (!(player_2_m))) {
                 //player_1_m = true
                 dir[1] = [0, -1]
                 player_2_m = true
@@ -601,6 +685,7 @@
                     return [i, j]
                 }
             }
+            //console.log(a)
             return from
         }
         function lose() {
@@ -698,24 +783,28 @@
         }
         function sound_fun(e) {
             sound = !(sound)
+            //console.log('bla')
+            //console.log(sound_b.innerHTML)
+            //console.log(sound_on)
             if (sound_b.innerHTML == sound_on) {
+                //console.log('bla')
                 sound_b.innerHTML = sound_off
             }
             else {
                 sound_b.innerHTML = sound_on
             }
         }
-        function add_key(e) {
-            keys.push(e.key)
+        function add_key(key) {
+            keys.push(key)
         }
-        function delete_key(e) {
-            let new_keys=[]
+        function delete_key(key) {
+            let new_keys = []
             for (let i = 0; i < keys.length; i++) {
-                if (keys[i]!=e.key) {
+                if (keys[i] != key) {
                     new_keys.push(keys[i])
                 }
             }
-            keys=new_keys
+            keys = new_keys
         }
         function end_time(e) {
             if (e.key == back_c) { go_back(e.key) }
@@ -726,13 +815,25 @@
             for (let i = 0; i < subset.length; i++) {
                 let is_true = false
                 for (let j = 0; j < set.length; j++) {
-                    is_true = is_true || (subset[i]==set[j])
+                    is_true = is_true || (subset[i] == set[j])
                 }
                 if (!(is_true)) {
                     return false
                 }
             }
             return true
+        }
+        function add_key_with_button(e) {
+            add_key(buttons_dirs[Number(e.target.id[e.target.id.length-1])-1])
+            key_to_dir("bla")
+            move_player_dir()
+            console.log(keys)
+            //console.log(e.target.id[e.target.id.length-1])
+            //console.log(e.target.id)
+            //console.log(e)
+        }
+        function delete_key_with_button(e) {
+            delete_key(buttons_dirs[Number(e.target.id[e.target.id.length-1])-1])
         }
 
 

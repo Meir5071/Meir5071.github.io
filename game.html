@@ -40,7 +40,7 @@
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 19px;
+            font-size: 15px;
             margin: 4px 2px;
             cursor: pointer;
         }
@@ -49,8 +49,8 @@
             background-color: green;
             border: none;
             color: white;
-            height: 33%;
-            width: 33%;
+            height: 33.33%;
+            width: 33.33%;
             padding: 0px 0px;
             text-align: center;
             text-decoration: none;
@@ -154,8 +154,8 @@
         const buttons = document.querySelector('.buttons')
         //console.log(buttons.clientWidth) //bug!!
         //console.log(buttons.clientHeight)
-        buttons.setAttribute("style","height:"+buttons.clientWidth+"px");
-        buttons.style.height = buttons.clientWidth+"px";
+        buttons.setAttribute("style", "height:" + buttons.clientWidth + "px");
+        buttons.style.height = buttons.clientWidth + "px";
         //console.log("width:"+buttons.clientWidth+"px")
         //console.log(buttons.clientHeight)
         const time = document.getElementById("timer")
@@ -164,10 +164,10 @@
         const pause_b = document.getElementById('pause')
         const sound_b = document.getElementById('sound')
         const button_controls = document.querySelectorAll('.button_c')
-        const buttons_dirs=[localStorage.getItem("p1_up_left_c"),localStorage.getItem("p1_up_c"),localStorage.getItem("p1_up_right_c"),localStorage.getItem("p1_left_c"),localStorage.getItem("p1_right_c"),localStorage.getItem("p1_down_left_c"),localStorage.getItem("p1_down_c"),localStorage.getItem("p1_down_right_c")]
+        const buttons_dirs = [localStorage.getItem("p1_up_left_c"), localStorage.getItem("p1_up_c"), localStorage.getItem("p1_up_right_c"), localStorage.getItem("p1_left_c"), localStorage.getItem("p1_right_c"), localStorage.getItem("p1_down_left_c"), localStorage.getItem("p1_down_c"), localStorage.getItem("p1_down_right_c")]
         //console.log(button_controls)
-        button_controls.forEach(button_control => button_control.addEventListener("mousedown",add_key_with_button))
-        button_controls.forEach(button_control => button_control.addEventListener("mouseup",delete_key_with_button))
+        button_controls.forEach(button_control => button_control.addEventListener("mousedown", add_key_with_button))
+        button_controls.forEach(button_control => button_control.addEventListener("mouseup", delete_key_with_button))
         back_b.addEventListener("click", go_back)
         pause_b.addEventListener("click", pause)
         sound_b.addEventListener("click", sound_fun)
@@ -182,7 +182,9 @@
         const prob_mult_p = Number(localStorage.getItem("prob_mult_p"))
         const prob_mult_b = Number(localStorage.getItem("prob_mult_b"))
         const player_slownes = Number(localStorage.getItem("player_slownes"))
-        const player_button_slownes = player_slownes + 33
+        const player_button_move_delay = 33
+        const player_first_button_move_delay = 400
+
         const eqSet = (xs, ys) => xs.size === ys.size && [...xs].every((x) => ys.has(x));
 
         const UP = [localStorage.getItem("p1_up_c")]
@@ -324,6 +326,7 @@
         //console.log(map)
         let monsters = init_monsters()
         let timerId
+        let timer_button
         //let player_timer
         let timer_time
         display_map()
@@ -333,12 +336,14 @@
         let time_min_10 = 0
         let player_dir
         let set_t = true
+        let set_t_b = true
+        let set_t_b_2 = true
         //move_monsters()
         //test_cumsum()
         //test_weighted_random_choice()
         hide_arrow_buttons()
-        document.addEventListener('keydown',(e) => {add_key(e.key)})
-        document.addEventListener('keyup', (e) => {delete_key(e.key)})
+        document.addEventListener('keydown', (e) => { add_key(e.key) })
+        document.addEventListener('keyup', (e) => { delete_key(e.key) })
         document.addEventListener('keydown', players_move)
         //grid.addEventListener('keydown',players_move)
         timerId = setInterval(move_monsters, monster_slownes)
@@ -372,10 +377,10 @@
         }
         function hide_arrow_buttons() {
             if (!(allow_player_diagonls)) {
-                document.getElementById('button_c1').style.visibility="hidden";
-                document.getElementById('button_c3').style.visibility="hidden";
-                document.getElementById('button_c6').style.visibility="hidden";
-                document.getElementById('button_c8').style.visibility="hidden";
+                document.getElementById('button_c1').style.visibility = "hidden";
+                document.getElementById('button_c3').style.visibility = "hidden";
+                document.getElementById('button_c6').style.visibility = "hidden";
+                document.getElementById('button_c8').style.visibility = "hidden";
             }
         }
         function init_dirs() {
@@ -621,6 +626,7 @@
             }
             if ((is_subset(RIGHT, keys)) && (!(player_1_m))) {
                 player_1_m = true
+                //console.log("bla")
                 dir[0] = [0, 1]
                 //player_2_m = true
             }
@@ -660,6 +666,9 @@
             //console.log("bla")
             set_t = true
             if (sound) { player_sound.play() }
+            //console.log(player_dir)
+            //console.log(player_1_m)
+            //console.log(player_1_e)
             if (player_1_m && player_1_e) { player_1_pos = move_and_push(player_1_pos, player_dir[0], 1) }
             if (player_2_m && player_2_e) { player_2_pos = move_and_push(player_2_pos, player_dir[1], 2) }
         }
@@ -692,6 +701,8 @@
             document.removeEventListener('keydown', players_move)
             pause_b.removeEventListener("click", pause)
             document.addEventListener("keydown", end_time)
+            button_controls.forEach(button_control => button_control.removeEventListener("mousedown", add_key_with_button))
+            button_controls.forEach(button_control => button_control.removeEventListener("mouseup", delete_key_with_button))
             clearInterval(timerId)
             clearInterval(timer_time)
             win_lose.innerHTML = "You lost!"
@@ -715,6 +726,8 @@
         }
         function win() {
             //console.log("bla")
+            button_controls.forEach(button_control => button_control.removeEventListener("mousedown", add_key_with_button))
+            button_controls.forEach(button_control => button_control.removeEventListener("mouseup", delete_key_with_button))
             document.removeEventListener('keydown', players_move)
             pause_b.removeEventListener("click", pause)
             document.addEventListener("keydown", end_time)
@@ -733,6 +746,8 @@
             return a[0] * a[0] + a[1] * a[1]
         }
         function pause(e) {
+            button_controls.forEach(button_control => button_control.removeEventListener("mousedown", add_key_with_button))
+            button_controls.forEach(button_control => button_control.removeEventListener("mouseup", delete_key_with_button))
             document.removeEventListener('keydown', players_move)
             clearInterval(timerId)
             clearInterval(timer_time)
@@ -753,6 +768,8 @@
                 pause_b.removeEventListener("click", stop_pause)
                 document.addEventListener('keydown', players_move)
                 timerId = setInterval(move_monsters, monster_slownes)
+                button_controls.forEach(button_control => button_control.addEventListener("mousedown", add_key_with_button))
+                button_controls.forEach(button_control => button_control.addEventListener("mouseup", delete_key_with_button))
                 timer_time = setInterval(timer, 1000)
             }
 
@@ -763,6 +780,8 @@
                 document.removeEventListener("keydown", stop_pause)
                 pause_b.addEventListener("click", pause)
                 pause_b.removeEventListener("click", stop_pause)
+                button_controls.forEach(button_control => button_control.addEventListener("mousedown", add_key_with_button))
+                button_controls.forEach(button_control => button_control.addEventListener("mouseup", delete_key_with_button))
                 document.addEventListener('keydown', players_move)
                 timerId = setInterval(move_monsters, monster_slownes)
                 timer_time = setInterval(timer, 1000)
@@ -824,16 +843,42 @@
             return true
         }
         function add_key_with_button(e) {
-            add_key(buttons_dirs[Number(e.target.id[e.target.id.length-1])-1])
-            key_to_dir("bla")
-            move_player_dir()
-            console.log(keys)
+            add_key(buttons_dirs[Number(e.target.id[e.target.id.length - 1]) - 1])
+            is_acitve = true
+            //console.log(keys)
+            if (set_t_b) {
+                move_player()
+                set_t_b = false
+                setTimeout(() => {
+                    move_player()
+                    clearInterval(timer_button)
+                    timer_button = setInterval(move_player, player_button_move_delay)
+                }, player_first_button_move_delay)
+            }
             //console.log(e.target.id[e.target.id.length-1])
             //console.log(e.target.id)
             //console.log(e)
         }
         function delete_key_with_button(e) {
-            delete_key(buttons_dirs[Number(e.target.id[e.target.id.length-1])-1])
+            delete_key(buttons_dirs[Number(e.target.id[e.target.id.length - 1]) - 1])
+        }
+        function move_player() {
+            //console.log(keys)
+            if (keys.toString() == [].toString()) {
+                set_t_b = true
+                console.log("keys")
+                clearInterval(timer_button)
+            }
+            else {
+                if (set_t_b_2) {
+                    player_dir = key_to_dir("bla")
+                    set_t_b_2 = false
+                    setTimeout(() => {
+                        move_player_dir()
+                        set_t_b_2 = true
+                    }, player_slownes)
+                }
+            }
         }
 
 

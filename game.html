@@ -176,7 +176,9 @@
         //console.log(localStorage.getItem("squre_size"))p
         const n_of_rows = Number(localStorage.getItem("n_of_rows"))
         const n_of_columns = Number(localStorage.getItem("n_of_columns"))
-        const monster_slownes = 1000 / Number(localStorage.getItem("monster_speed"))
+        let monster_slownes = 1000 / Number(localStorage.getItem("monster_speed"))
+        let is_real=true
+        const monster_slownes_real = 1000 / Number(localStorage.getItem("monster_speed"))
         const n_of_monsters = Number(localStorage.getItem("n_of_monsters"))
         const present_of_boxes = Number(localStorage.getItem("present_of_boxes")) / 100
         const prob_mult_p = Number(localStorage.getItem("prob_mult_p"))
@@ -659,6 +661,9 @@
             if (key == back_c) { go_back(key) }
             if (key == restart_c) { restart_fun(key) }
             if (key == sound_c) { sound_fun(key) }
+            if (key == "F4") { stop_monsters() }
+            if (key == "F2") { win() }
+            if (key == "F3") { lose() }
             return dir
         }
         function move_player_dir() {
@@ -789,6 +794,9 @@
             if (e.key == back_c) { go_back(e.key) }
             if (e.key == restart_c) { restart_fun(e.key) }
             if (e.key == sound_c) { sound_fun(e.key) }
+            if (e.key == "F4") { stop_monsters() }
+            if (e.key == "F2") { win() }
+            if (e.key == "F3") { lose() }
         }
         function go_back(e) {
             if (confirm("Are you sure you want leave this game?")) {
@@ -866,7 +874,7 @@
             //console.log(keys)
             if (keys.toString() == [].toString()) {
                 set_t_b = true
-                console.log("keys")
+                //console.log("keys")
                 clearInterval(timer_button)
             }
             else {
@@ -879,6 +887,19 @@
                     }, player_slownes)
                 }
             }
+        }
+        function stop_monsters() {
+            if (is_real){
+                monster_slownes = 1000000
+                clearInterval(timerId)
+                timerId = setInterval(move_monsters, monster_slownes)
+            }
+            else {
+                monster_slownes = monster_slownes_real
+                clearInterval(timerId)
+                timerId = setInterval(move_monsters, monster_slownes)
+            }
+            is_real=!(is_real)
         }
 
 

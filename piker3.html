@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Picker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: turquoise;
+        }
+
+        #colorPickerContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        #colorWheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #intensitySlider {
+            width: 200px;
+            height: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #colorDisplay {
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        #colorInfo {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="colorPickerContainer">
+        <canvas id="colorWheel" width="200" height="200"></canvas>
+        <div id="intensitySlider"></div>
+        <div id="colorDisplay"></div>
+        <div id="colorInfo">
+            <p>RGB: <span id="rgb"></span></p>
+            <p>HSV: <span id="hsv"></span></p>
+            <p>Hex: <span id="hex"></span></p>
+            <p>For hebrew wikipedia:{{איכ|<span id="wiki"></span>}}</p>
+        </div>
+    </div>
+    <script>
+        const colorWheelCanvas = document.getElementById('colorWheel');
+        const colorWheelCtx = colorWheelCanvas.getContext('2d');
+        const intensitySlider = document.getElementById('intensitySlider');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const rgbDisplay = document.getElementById('rgb');
+        const hsvDisplay = document.getElementById('hsv');
+        const hexDisplay = document.getElementById('hex');
+        const wikiDisplay = document.getElementById('wiki');
+
+        let selectedHue = 0;
+        let selectedSaturation = 100; // Changed to percentage
+
+        // Create the color wheel image data
+        const imageData = colorWheelCtx.createImageData(200, 200);
+        for (let y = 0; y < 200; y++) {
+            for (let x = 0; x < 200; x++) {
+                const angle = Math.atan2(y - 100, x - 100) * (180 / Math.PI);
+                const hue = (angle + 180) % 360;
+                const distance = Math.sqrt((x - 100) * (x - 100) + (y - 100) * (y - 100));
+                const saturation = distance / 100; // Calculate saturation based on distance
+                const value = 1; // Full value
+                const hsv = { h: hue, s: saturation, v: value };
+                const rgb = hsvToRgb(hsv);
+                const index = (y * 200 + x) * 4;
+                imageData.data[index + 0] = rgb.r;
+                imageData.data[index + 1] = rgb.g;
+                imageData.data[index + 2] = rgb.b;
+                imageData.data[index + 3] = 255; // Alpha channel
+            }
+        }
+        colorWheelCtx.putImageData(imageData, 0, 0);
+
+        colorWheelCanvas.addEventListener('click', (event) => {
+            const rect = colorWheelCanvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const pixelData = colorWheelCtx.getImageData(x, y, 1, 1).data;
+            const rgb = { r: pixelData[0], g: pixelData[1], b: pixelData[2] };
+            const hsv = rgbToHsv(rgb);
+
+            selectedHue = hsv.h;
+            selectedSaturation = hsv.s * 100;
+            updateIntensitySlider();
+        });
+
+        intensitySlider.addEventListener('click', (event) => {
+            const rect = intensitySlider.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const value = x / rect.width;
+
+            const hsv = { h: selectedHue, s: selectedSaturation / 100, v: value };
+            const rgb = hsvToRgb(hsv);
+            updateDisplays(rgb, hsv);
+        });
+
+        function updateIntensitySlider() {
+            const hue = selectedHue;
+            const saturation = selectedSaturation;
+
+            // Convert HSV to RGB for gradient
+            const startColor = hsvToRgb({ h: hue, s: saturation / 100, v: 0 });
+            const endColor = hsvToRgb({ h: hue, s: saturation / 100, v: 1 });
+
+            // Create a linear gradient with the calculated RGB colors
+            const gradient = `linear-gradient(to right, rgb(${startColor.r}, ${startColor.g}, ${startColor.b}), rgb(${endColor.r}, ${endColor.g}, ${endColor.b}))`;
+            intensitySlider.style.background = gradient;
+        }
+
+        function updateDisplays(rgb, hsv) {
+            colorDisplay.style.backgroundColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+            rgbDisplay.textContent = `(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+            hsvDisplay.textContent = `(${hsv.h}, ${hsv.s * 100}%, ${hsv.v})`; // Display saturation as percentage
+            hexDisplay.textContent = rgbToHex(rgb.r, rgb.g, rgb.b);
+            wikiDisplay.textContent = `${rgb.r}|${rgb.g}|${rgb.b}`;
+        }
+
+        function hsvToRgb(hsv) {
+            const { h, s, v } = hsv;
+            const c = v * s;
+            const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            const m = v - c;
+
+            let r, g, b;
+            if (h < 60) {
+                r = c; g = x; b = 0;
+            } else if (h < 120) {
+                r = x; g = c; b = 0;
+            } else if (h < 180) {
+                r = 0; g = c; b = x;
+            } else if (h < 240) {
+                r = 0; g = x; b = c;
+            } else if (h   
+ < 300) {
+                r = x; g = 0; b = c;
+            } else {
+                r = c; g = 0; b = x;
+            }
+
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+
+            return { r, g, b };
+        }
+
+        function   
+ rgbToHsv(rgb) {
+            const r = rgb.r / 255;
+            const g = rgb.g / 255;
+            const b = rgb.b / 255;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const delta   
+ = max - min;
+
+            const   
+ h = delta === 0 ? 0
+                : max === r ? 60 * (((g - b) / delta) % 6)
+                : max === g ? 60 * (((b - r) / delta) + 2)
+                : 60 * (((r - g) / delta) + 4);
+            const s = max === 0 ? 0 : delta / max;
+            const v = max;
+
+            return { h, s, v };
+        }
+
+        function rgbToHex(r, g, b) {
+            const componentToHex = (c) => {
+                const hex = c.toString(16);
+                return hex.length === 1 ? "0" + hex : hex;
+            };
+
+            return "#" + componentToHex(r) + componentToHex(g)   
+ + componentToHex(b);
+        }
+    </script>
+</body>
+</html>  
